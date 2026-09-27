@@ -1236,6 +1236,79 @@
             font-weight: 600;
         }
 
+        .weather-date-picker-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            padding: 4px 10px 4px 12px;
+            transition: all var(--transition-fast);
+        }
+
+        .weather-date-picker-wrap:hover,
+        .weather-date-picker-wrap:focus-within {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px var(--glow-cyan);
+        }
+
+        .date-picker-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .weather-date-input {
+            background: transparent;
+            border: none;
+            color: var(--accent-cyan);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.82rem;
+            cursor: pointer;
+            outline: none;
+            padding: 2px;
+        }
+
+        [data-theme="light"] .weather-date-input {
+            color: var(--accent-blue);
+        }
+
+        .period-presets-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .btn-period-preset {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-dim);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 9px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .btn-period-preset:hover,
+        .btn-period-preset.active {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .card-weather-period-txt {
+            color: var(--accent-cyan);
+            font-weight: 700;
+            font-size: 0.7rem;
+        }
+
         .family-votes-summary {
             display: flex;
             align-items: center;
@@ -2078,12 +2151,23 @@
             <!-- Weather Sync & Family Heart Voting Bar -->
             <div class="weather-and-votes-bar">
                 <div class="weather-sync-status">
-                    <button class="btn-refresh-weather" id="btn-refresh-weather" onclick="refreshAllWeather(true)" title="Consultar Open-Meteo ao vivo para todos os 14 destinos de 09/10 a 12/10">
+                    <div class="weather-date-picker-wrap">
+                        <label for="weather-start-date" class="date-picker-label">📅 Início (4 dias):</label>
+                        <input type="date" id="weather-start-date" class="weather-date-input" value="2026-10-09" onchange="onWeatherStartDateChanged(this.value)" title="Escolha a data inicial (o sistema mantém automaticamente 4 dias)">
+                    </div>
+
+                    <div class="period-presets-row">
+                        <button class="btn-period-preset active" data-date="2026-10-09" onclick="setWeatherPeriodStartDate('2026-10-09'); refreshAllWeather(true);" title="Feriadão Oficial">🎉 09/10 a 12/10</button>
+                        <button class="btn-period-preset" data-date="today" onclick="setWeatherToToday(); refreshAllWeather(true);" title="Próximos 4 dias a partir de hoje">☀️ Hoje + 3d</button>
+                    </div>
+
+                    <button class="btn-refresh-weather" id="btn-refresh-weather" onclick="refreshAllWeather(true)" title="Consultar Open-Meteo ao vivo para os 4 dias selecionados">
                         <span class="refresh-spinner" id="weather-spinner">🔄</span>
-                        <span id="weather-btn-label">Atualizar Previsão ao Vivo</span>
-                        <span class="badge-period">09/10 a 12/10</span>
+                        <span id="weather-btn-label">Atualizar Previsão</span>
+                        <span class="badge-period" id="badge-weather-period">09/10 a 12/10</span>
                     </button>
-                    <span class="weather-meta-info" id="weather-meta-info">🛰️ Satélite Open-Meteo • 09/10 a 12/10</span>
+
+                    <span class="weather-meta-info" id="weather-meta-info">🛰️ Satélite Open-Meteo • 4 dias</span>
                 </div>
 
                 <div class="family-votes-summary">
@@ -2148,8 +2232,11 @@
                 <!-- 4-Day Detailed Weather Forecast -->
                 <div>
                     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
-                        <h3 class="modal-section-title" style="margin-bottom: 0;"><span>⛅</span> Previsão do Tempo no Feriadão (09/10 a 12/10)</h3>
-                        <button class="btn-refresh-weather-mini" onclick="refreshAllWeather(true)">🔄 Atualizar ao Vivo</button>
+                        <h3 class="modal-section-title" style="margin-bottom: 0;"><span>⛅</span> Previsão do Tempo (<span id="modal-weather-period-title">09/10 a 12/10</span>)</h3>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="date" id="modal-weather-start-date" class="weather-date-input" value="2026-10-09" onchange="onWeatherStartDateChanged(this.value)" style="padding: 4px 8px; font-size: 0.78rem; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); border-radius: var(--radius-sm);" title="Alterar data de início (4 dias consecutivos)">
+                            <button class="btn-refresh-weather-mini" onclick="refreshAllWeather(true)">🔄 Atualizar</button>
+                        </div>
                     </div>
                     <div class="weather-detail-grid" id="m-weather-grid">
                         <!-- Dynamic -->
@@ -2721,6 +2808,86 @@
             localStorage.setItem('family_heart_votes', JSON.stringify(familyVotes));
         }
 
+        // DYNAMIC 4-DAY PERIOD MANAGEMENT
+        function get4DayRange(startDateStr) {
+            if (!startDateStr || !startDateStr.includes('-')) {
+                startDateStr = '2026-10-09';
+            }
+            const [year, month, day] = startDateStr.split('-').map(Number);
+            const start = new Date(year, month - 1, day, 12, 0, 0);
+
+            const dates = [];
+            const weekdaysPt = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+
+            for (let i = 0; i < 4; i++) {
+                const d = new Date(start);
+                d.setDate(start.getDate() + i);
+
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const dayNum = String(d.getDate()).padStart(2, '0');
+                const iso = `${y}-${m}-${dayNum}`;
+                const dayFormatted = `${dayNum}/${m}`;
+                const weekday = weekdaysPt[d.getDay()];
+
+                dates.push({
+                    iso: iso,
+                    formatted: dayFormatted,
+                    weekday: weekday,
+                    shortWeekday: weekday.slice(0, 3)
+                });
+            }
+
+            return {
+                startDate: dates[0].iso,
+                endDate: dates[3].iso,
+                periodStr: `${dates[0].formatted} a ${dates[3].formatted}`,
+                dates: dates
+            };
+        }
+
+        let selectedWeatherStartDate = localStorage.getItem('weather_start_date') || '2026-10-09';
+        let currentWeatherPeriod = get4DayRange(selectedWeatherStartDate);
+        let currentWeatherPeriodStr = currentWeatherPeriod.periodStr;
+
+        function setWeatherPeriodStartDate(dateStr) {
+            selectedWeatherStartDate = dateStr;
+            currentWeatherPeriod = get4DayRange(dateStr);
+            currentWeatherPeriodStr = currentWeatherPeriod.periodStr;
+            localStorage.setItem('weather_start_date', dateStr);
+
+            const dateInput = document.getElementById('weather-start-date');
+            if (dateInput) dateInput.value = dateStr;
+
+            const modalDateInput = document.getElementById('modal-weather-start-date');
+            if (modalDateInput) modalDateInput.value = dateStr;
+
+            const badge = document.getElementById('badge-weather-period');
+            if (badge) badge.innerText = `${currentWeatherPeriodStr}`;
+
+            const modalTitlePeriod = document.getElementById('modal-weather-period-title');
+            if (modalTitlePeriod) modalTitlePeriod.innerText = currentWeatherPeriodStr;
+
+            document.querySelectorAll('.btn-period-preset').forEach(b => {
+                b.classList.toggle('active', b.dataset.date === dateStr);
+            });
+        }
+
+        function setWeatherToToday() {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${y}-${m}-${d}`;
+            setWeatherPeriodStartDate(todayStr);
+        }
+
+        function onWeatherStartDateChanged(newDateStr) {
+            if (!newDateStr) return;
+            setWeatherPeriodStartDate(newDateStr);
+            refreshAllWeather(true);
+        }
+
         // GPS COORDINATES FOR ALL 14 DESTINATIONS FOR OPEN-METEO WEATHER API
         const CITY_COORDINATES = {
             penedo: { lat: -22.44, lon: -44.53, name: 'Penedo' },
@@ -2755,6 +2922,7 @@
 
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
+            setWeatherPeriodStartDate(selectedWeatherStartDate);
             updateCompareBadge();
             updateTotalVotesDisplay();
             renderDestinations();
@@ -2763,7 +2931,7 @@
             const cachedTime = localStorage.getItem('cached_weather_time');
             if (cachedTime) {
                 const info = document.getElementById('weather-meta-info');
-                if (info) info.innerHTML = `🛰️ <strong>Open-Meteo</strong> • Atualizado às ${cachedTime}`;
+                if (info) info.innerHTML = `🛰️ <strong>Open-Meteo</strong> • ${currentWeatherPeriodStr} (Atualizado às ${cachedTime})`;
             }
         });
 
@@ -2960,11 +3128,11 @@
                                 </div>
                             </div>
 
-                            <!-- 4-Day Mini Weather Strip (09/10 a 12/10) -->
+                            <!-- 4-Day Mini Weather Strip -->
                             <div class="weather-holiday-strip">
                                 <div class="weather-strip-header">
-                                    <span>⛅ Previsão Feriadão</span>
-                                    <span>09/10 a 12/10</span>
+                                    <span>⛅ Previsão (4 Dias)</span>
+                                    <span class="card-weather-period-txt">${currentWeatherPeriodStr}</span>
                                 </div>
                                 <div class="weather-days-row">
                                     ${city.weatherForecast.map(w => `
@@ -3058,6 +3226,12 @@
                     </div>
                 </div>
             `;
+
+            // Sync modal weather date controls
+            const modalDateInput = document.getElementById('modal-weather-start-date');
+            if (modalDateInput) modalDateInput.value = selectedWeatherStartDate;
+            const modalTitlePeriod = document.getElementById('modal-weather-period-title');
+            if (modalTitlePeriod) modalTitlePeriod.innerText = currentWeatherPeriodStr;
 
             // Route advice
             document.getElementById('m-route-desc').innerText = city.routeSummary;
@@ -3237,25 +3411,24 @@
 
             if (btn) btn.disabled = true;
             if (spinner) spinner.classList.add('spin-active');
-            if (label) label.innerText = 'Consultando satélites...';
-            if (info) info.innerText = '📡 Conectando ao modelo Open-Meteo (09/10 a 12/10)...';
+            if (label) label.innerText = 'Consultando...';
+            if (info) info.innerText = `📡 Consultando satélites para ${currentWeatherPeriodStr}...`;
 
             try {
+                const range = currentWeatherPeriod;
                 const lats = destinations.map(d => CITY_COORDINATES[d.id].lat).join(',');
                 const lons = destinations.map(d => CITY_COORDINATES[d.id].lon).join(',');
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&timezone=America%2FSao_Paulo&start_date=2026-10-09&end_date=2026-10-12`;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&timezone=America%2FSao_Paulo&start_date=${range.startDate}&end_date=${range.endDate}`;
 
                 const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
+                const dataArray = await response.json();
+
+                if (dataArray.error || (Array.isArray(dataArray) && dataArray[0] && dataArray[0].error)) {
+                    const reason = dataArray.reason || (dataArray[0] && dataArray[0].reason) || 'Data fora da janela de previsão.';
+                    throw new Error(reason);
                 }
 
-                const dataArray = await response.json();
                 const results = Array.isArray(dataArray) ? dataArray : [dataArray];
-
-                const daysPt = ['Quinta', 'Sexta', 'Sábado', 'Domingo'];
-                const datesFormatted = ['09/10', '10/10', '11/10', '12/10'];
-
                 const updatedForecasts = {};
 
                 results.forEach((cityData, index) => {
@@ -3266,9 +3439,10 @@
                     const newForecast = [];
 
                     for (let i = 0; i < 4; i++) {
-                        const wCode = daily.weathercode ? daily.weathercode[i] : 2;
-                        const tMax = Math.round(daily.temperature_2m_max[i]);
-                        const tMin = Math.round(daily.temperature_2m_min[i]);
+                        const dayMeta = range.dates[i] || { formatted: `Dia ${i+1}`, weekday: '' };
+                        const wCode = (daily.weathercode && daily.weathercode[i] !== undefined) ? daily.weathercode[i] : 2;
+                        const tMax = Math.round(daily.temperature_2m_max ? daily.temperature_2m_max[i] : 25);
+                        const tMin = Math.round(daily.temperature_2m_min ? daily.temperature_2m_min[i] : 18);
                         const precip = (daily.precipitation_sum && daily.precipitation_sum[i] !== null) ? daily.precipitation_sum[i].toFixed(1) : '0.0';
                         const prob = (daily.precipitation_probability_max && daily.precipitation_probability_max[i] !== null) ? daily.precipitation_probability_max[i] : 0;
                         
@@ -3276,8 +3450,8 @@
                         const desc = `${wInfo.desc} (${prob}% prob., ${precip}mm)`;
 
                         newForecast.push({
-                            date: datesFormatted[i] || `Dia ${i+1}`,
-                            day: daysPt[i] || '',
+                            date: dayMeta.formatted,
+                            day: dayMeta.weekday,
                             icon: wInfo.icon,
                             temp: `${tMin}° - ${tMax}°C`,
                             desc: desc
@@ -3289,6 +3463,7 @@
                 });
 
                 // Persist to localStorage
+                localStorage.setItem(`cached_weather_${range.startDate}`, JSON.stringify(updatedForecasts));
                 localStorage.setItem('cached_weather_forecasts', JSON.stringify(updatedForecasts));
                 const now = new Date();
                 const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -3296,28 +3471,50 @@
 
                 renderDestinations();
 
+                // If modal is open, update modal weather grid too
+                const detailModal = document.getElementById('detail-modal');
+                if (detailModal && detailModal.style.display === 'flex') {
+                    const activeTitle = document.getElementById('m-title').innerText;
+                    const currentCity = destinations.find(d => d.name === activeTitle);
+                    if (currentCity) {
+                        document.getElementById('m-weather-grid').innerHTML = currentCity.weatherForecast.map(w => `
+                            <div class="weather-detail-card">
+                                <div class="wd-date">${w.date} (${w.day})</div>
+                                <div class="wd-icon">${w.icon}</div>
+                                <div class="wd-temp">${w.temp}</div>
+                                <div class="wd-desc">${w.desc}</div>
+                            </div>
+                        `).join('');
+                    }
+                }
+
                 if (info) {
-                    info.innerHTML = `✅ <strong>Satélite Open-Meteo</strong> • Atualizado hoje às ${timeStr}`;
+                    info.innerHTML = `✅ <strong>Satélite Open-Meteo</strong> • ${range.periodStr} (Hoje às ${timeStr})`;
                 }
                 if (label) label.innerText = 'Previsão Atualizada!';
 
                 if (showToast) {
-                    showToastMessage('🌤️ Previsão atualizada com sucesso para todas as 14 cidades (09/10 a 12/10)!');
+                    showToastMessage(`🌤️ Previsão atualizada para ${range.periodStr} (4 dias) em todas as 14 cidades!`);
                 }
             } catch (err) {
                 console.error('Erro ao atualizar clima:', err);
+                const isOutOfRange = err.message.toLowerCase().includes('out of allowed range');
+                const userMsg = isOutOfRange
+                    ? '⚠️ A previsão do satélite só alcança até 16 dias a partir de hoje. Escolha uma data próxima!'
+                    : `⚠️ ${err.message || 'Falha ao conectar aos satélites.'}`;
+                    
                 if (info) {
-                    info.innerText = '⚠️ Falha ao conectar ao satélite. Usando dados salvos.';
+                    info.innerText = isOutOfRange ? '⚠️ Data fora da janela de 16 dias do satélite.' : '⚠️ Falha ao conectar.';
                 }
                 if (showToast) {
-                    showToastMessage('⚠️ Falha temporária na conexão meteorológica. Dados preservados.');
+                    showToastMessage(userMsg, 4500);
                 }
             } finally {
                 if (btn) btn.disabled = false;
                 if (spinner) spinner.classList.remove('spin-active');
                 setTimeout(() => {
-                    if (label) label.innerText = 'Atualizar Previsão ao Vivo';
-                }, 3500);
+                    if (label) label.innerText = 'Atualizar Previsão';
+                }, 3000);
             }
         }
 
