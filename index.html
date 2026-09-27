@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roteiros de Viagem</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        h1 { text-align: center; color: #2c3e50; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border-left: 5px solid #3498db; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        .card h2 { margin: 0 0 10px 0; font-size: 1.2rem; color: #2980b9; }
+        .card p { margin: 5px 0; font-size: 0.9rem; }
+        
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal-content { background-color: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #7f8c8d; }
+        .close:hover { color: #e74c3c; }
+        .modal h2 { margin-top: 0; color: #2c3e50; }
+        .tourist-links { margin-top: 20px; }
+        .tourist-links a { display: block; margin: 8px 0; color: #3498db; text-decoration: none; font-weight: bold; }
+        .tourist-links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>Roteiros a partir de Niterói</h1>
+    <div class="grid" id="card-container"></div>
+
+    <!-- Modal -->
+    <div id="cityModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Nome da Cidade</h2>
+            <p><strong>Detalhes:</strong> <span id="modal-details"></span></p>
+            <p><strong>Clima Previsto:</strong> <span id="modal-weather"></span></p>
+            <div class="tourist-links">
+                <h3>Pontos Turísticos:</h3>
+                <div id="modal-links"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cities = [
+            { name: "Penedo (RJ)", dist: "~190 km", time: "2h 45m", fuel: "~15L", weather: "Agradável (16°C - 26°C)", details: "Pequena Finlândia brasileira, famosa pelas cachoeiras e fábricas de chocolate.", links: [{ text: "Pequena Finlândia", url: "https://www.tripadvisor.com.br/Attraction_Review-g303503-d2350438-Reviews-Pequena_Finlandia-Penedo_Itatiaia_State_of_Rio_de_Janeiro.html" }, { text: "Cachoeira de Deus", url: "https://www.tripadvisor.com.br/Attraction_Review-g303503-d2361730-Reviews-Cachoeira_de_Deus-Penedo_Itatiaia_State_of_Rio_de_Janeiro.html" }] },
+            { name: "Paraty (RJ)", dist: "~260 km", time: "4h 30m", fuel: "~20L", weather: "Possível chuva (22°C - 26°C)", details: "Centro histórico colonial impecável e passeios de escuna pelas ilhas.", links: [{ text: "Centro Histórico", url: "https://www.tripadvisor.com.br/Attraction_Review-g303504-d311985-Reviews-Centro_Historico-Paraty_State_of_Rio_de_Janeiro.html" }] },
+            { name: "Ouro Preto (MG)", dist: "~400 km", time: "6h 15m", fuel: "~31L", weather: "Ameno (15°C - 26°C)", details: "Patrimônio Mundial com ladeiras de paralelepípedo e igrejas barrocas.", links: [{ text: "Praça Tiradentes", url: "https://www.tripadvisor.com.br/Attraction_Review-g303387-d2426315-Reviews-Tiradentes_Square-Ouro_Preto_State_of_Minas_Gerais.html" }, { text: "Igreja S. Francisco", url: "https://www.tripadvisor.com.br/Attraction_Review-g303387-d311894-Reviews-Igreja_de_Sao_Francisco_de_Assis-Ouro_Preto_State_of_Minas_Gerais.html" }] },
+            { name: "Vitória/Vila Velha", dist: "~500 km", time: "7h 30m", fuel: "~38L", weather: "Sol (23°C - 29°C)", details: "Cidades irmãs unidas pela Terceira Ponte, famosas pelas praias e pelo convento.", links: [{ text: "Convento da Penha", url: "https://www.tripadvisor.com.br/Attraction_Review-g303323-d312151-Reviews-Convento_da_Penha-Vila_Velha_State_of_Espirito_Santo.html" }, { text: "Praia da Costa", url: "https://www.tripadvisor.com.br/Attraction_Review-g303323-d2382613-Reviews-Costa_Beach-Vila_Velha_State_of_Espirito_Santo.html" }] },
+            { name: "Serra da Canastra", dist: "~670 km", time: "9h 30m", fuel: "~52L", weather: "Pancadas (19°C - 29°C)", details: "Berço do Rio São Francisco e casa do famoso queijo Canastra.", links: [{ text: "Parque Nacional", url: "https://www.tripadvisor.com.br/Attraction_Review-g2343886-d2417720-Reviews-Serra_da_Canastra_National_Park-Sao_Roque_de_Minas_State_of_Minas_Gerais.html" }, { text: "Cachoeira Casca d'Anta", url: "https://www.tripadvisor.com.br/Attraction_Review-g2343886-d2417721-Reviews-Casca_d_Anta_Waterfall-Sao_Roque_de_Minas_State_of_Minas_Gerais.html" }] },
+            { name: "Beto Carrero (SC)", dist: "~1.000 km", time: "13h 30m", fuel: "~77L", weather: "Instável (18°C - 24°C)", details: "O maior parque temático da América Latina.", links: [{ text: "Site Oficial do Parque", url: "https://www.betocarrero.com.br/" }] }
+            // Adicionei algumas cidades como exemplo, você pode copiar e colar essa estrutura para adicionar as demais!
+        ];
+
+        const container = document.getElementById('card-container');
+
+        cities.forEach((city, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <h2>${city.name}</h2>
+                <p>🕒 ${city.time} | 🛣️ ${city.dist}</p>
+                <p>⛽ ${city.fuel}</p>
+            `;
+            card.onclick = () => openModal(index);
+            container.appendChild(card);
+        });
+
+        function openModal(index) {
+            const city = cities[index];
+            document.getElementById('modal-title').innerText = city.name;
+            document.getElementById('modal-details').innerText = city.details;
+            document.getElementById('modal-weather').innerText = city.weather;
+            
+            const linksContainer = document.getElementById('modal-links');
+            linksContainer.innerHTML = '';
+            city.links.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.url;
+                a.target = '_blank';
+                a.innerText = '📍 ' + link.text;
+                linksContainer.appendChild(a);
+            });
+
+            document.getElementById('cityModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('cityModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('cityModal');
+            if (event.target == modal) { modal.style.display = 'none'; }
+        }
+    </script>
+</body>
+</html>
