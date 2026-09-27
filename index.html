@@ -716,9 +716,31 @@
             margin-bottom: 48px;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .cards-grid {
                 grid-template-columns: 1fr;
+            }
+
+            /* img2: Ocultar elementos marcados em modo mobile */
+            .nav-actions {
+                display: none !important;
+            }
+            .banner-tag-badge {
+                display: none !important;
+            }
+            .banner-glass-bar {
+                display: none !important;
+            }
+            .banner-frame {
+                border-radius: var(--radius-md);
+            }
+            .nav-inner {
+                padding: 10px 16px;
+                justify-content: center;
+                text-align: center;
+            }
+            .brand-box {
+                justify-content: center;
             }
         }
 
@@ -1827,7 +1849,7 @@
                 category: 'serra',
                 categoryLabel: 'Serra & Chocolates',
                 funnyTip: 'Menos de 3h de viagem: ninguém vai ter tempo de perguntar "já tamo chegando?" mais de 10 vezes no banco de trás!',
-                image: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/penedo.jpg',
                 routeSummary: 'Fonseca ➔ Ponte Rio-Niterói ➔ Linha Vermelha ➔ Rodovia Presidente Dutra (BR-116) até a Saída 311 (Itatiaia/Penedo).',
                 departureTip: 'No dia 09/10, saia bem cedo (até 6h30) para evitar o tráfego pesado da Ponte e Linha Vermelha sentido Dutra.',
                 weatherForecast: [
@@ -1859,7 +1881,7 @@
                 category: 'historico',
                 categoryLabel: 'Histórico & Litoral',
                 funnyTip: 'Ruas de pedra pé-de-moleque pra testar os tornozelos da família e cachaça Gabriela com cravo e canela pros pais relaxarem!',
-                image: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/paraty.jpg',
                 routeSummary: 'Fonseca ➔ Ponte ➔ Av. Brasil ➔ BR-101 (Rio-Santos) passando por Mangaratiba e Angra dos Reis até Paraty.',
                 departureTip: 'A Rio-Santos costuma reter na saída de Itaguaí nos feriados. Saia às 5h30 ou após as 12h na quinta-feira.',
                 weatherForecast: [
@@ -1891,7 +1913,7 @@
                 category: 'praia',
                 categoryLabel: 'Praias & Natureza',
                 funnyTip: '102 praias no município e a família vai gastar 2 horas discutindo em qual delas parar o carro!',
-                image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/ubatuba.jpg',
                 routeSummary: 'Fonseca ➔ Ponte ➔ BR-101 (Rio-Santos) contornando Angra e Paraty até Ubatuba no litoral norte paulista.',
                 departureTip: 'Estrada sinuosa com visuais deslumbrantes da Mata Atlântica. Dirija com calma nas curvas da divisa RJ/SP.',
                 weatherForecast: [
@@ -1923,7 +1945,7 @@
                 category: 'historico',
                 categoryLabel: 'Histórico & Barroco',
                 funnyTip: 'Ladeiras íngremes pra queimar o feijão tropeiro e garantir que a garotada vá dormir antes das 21h!',
-                image: 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/ouropreto.jpg',
                 routeSummary: 'Fonseca ➔ Linha Vermelha ➔ BR-040 (passando por Petrópolis, Juiz de Fora e Barbacena) ➔ BR-356 sentido Ouro Preto.',
                 departureTip: 'A BR-040 é duplicada e tem excelentes postos de apoio. A subida da Serra de Petrópolis rende belas fotos.',
                 weatherForecast: [
@@ -1955,7 +1977,7 @@
                 category: 'praia',
                 categoryLabel: 'Ilha & Ecoturismo',
                 funnyTip: 'Levem 10 frascos de repelente na bagagem, ou os borrachudos da ilha vão devorar as três famílias inteiras!',
-                image: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/ilhabela.jpg',
                 routeSummary: 'Fonseca ➔ Rio-Santos ou Dutra até São Sebastião ➔ Balsa de travessia para Ilhabela (20 minutos de travessia).',
                 departureTip: 'Essencial agendar "Hora Marcada" da balsa no site da Dersa para evitar filas de até 3 horas no feriadão.',
                 weatherForecast: [
@@ -1987,7 +2009,7 @@
                 category: 'arte',
                 categoryLabel: 'Arte & Jardim Botânico',
                 funnyTip: 'Inhotim: todo mundo fingindo que é crítico refinado e entende profundamente de arte contemporânea abstrata!',
-                image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/brumadinho.jpg',
                 routeSummary: 'Fonseca ➔ Linha Vermelha ➔ BR-040 sentido Belo Horizonte ➔ Saída para BR-381 / Brumadinho.',
                 departureTip: 'Compre ingressos do Instituto Inhotim com antecedência online para evitar filas no feriadão de outubro.',
                 weatherForecast: [
@@ -2019,7 +2041,7 @@
                 category: 'serra',
                 categoryLabel: 'Serra & Cultura Germânica',
                 funnyTip: 'Suíça Capixaba: hora de colocar casaco de lã no calor tropical e tirar foto fingindo que tá em Munique!',
-                image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/domingosmartins.jpg',
                 routeSummary: 'Fonseca (Niterói) ➔ Saída direta para BR-101 Norte (sem pegar a Ponte!) ➔ Rio Novo do Sul ➔ BR-262 (Pedra Azul).',
                 departureTip: 'Super vantagem: saindo do Fonseca pela Alameda São Boaventura, você já cai direto na BR-101 Norte sem pegar a Ponte Rio-Niterói!',
                 weatherForecast: [
@@ -2051,7 +2073,7 @@
                 category: 'litoral',
                 categoryLabel: 'Litoral & Moqueca',
                 funnyTip: 'Subir a ladeira do Convento da Penha rezando por paciência e comer moqueca na autêntica panela de barro de Goiabeiras!',
-                image: 'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/vitoria.jpg',
                 routeSummary: 'Fonseca (Niterói) ➔ BR-101 Norte direto até a Grande Vitória. Trajeto contínuo e sem cruzar a Ponte.',
                 departureTip: 'Paradas ótimas em Campos dos Goytacazes e Iconha para almoçar e abastecer com calma.',
                 weatherForecast: [
@@ -2083,7 +2105,7 @@
                 category: 'historico',
                 categoryLabel: 'Patrimônio & Música',
                 funnyTip: 'Quase 10 horas de estrada: preparem a garganta pras cantorias desafinadas das tias até o cerrado mineiro!',
-                image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/diamantina.jpg',
                 routeSummary: 'Fonseca ➔ Linha Vermelha ➔ BR-040 até BH ➔ Curvelo (BR-135) ➔ Diamantina (BR-259 / BR-367).',
                 departureTip: 'Saia às 4h da manhã para pegar a BR-040 livre e chegar a Diamantina no meio da tarde com luz solar.',
                 weatherForecast: [
@@ -2115,7 +2137,7 @@
                 category: 'aventura',
                 categoryLabel: 'Ecoturismo & Queijo',
                 funnyTip: 'Poeira na lataria, banho de cachoeira gelada e o porta-malas voltando entupido de 30 kg de Queijo Canastra premiado!',
-                image: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/canastra.jpg',
                 routeSummary: 'Fonseca ➔ Dutra até Barra Mansa ➔ Caxambu ➔ Lavras ➔ Formiga / Piumhi ➔ São Roque de Minas.',
                 departureTip: 'Recomendado veículo com boa altura do solo para acessar o topo do Parque Nacional e as fazendas produtoras de queijo.',
                 weatherForecast: [
@@ -2147,7 +2169,7 @@
                 category: 'praia',
                 categoryLabel: 'Baleias & Falésias',
                 funnyTip: 'Se as baleias Jubarte saltarem bem na hora do selfie de família no barco, o feriadão tá mais do que pago!',
-                image: 'https://images.unsplash.com/photo-1509233725247-49e657c54213?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/costabaleias.jpg',
                 routeSummary: 'Fonseca (Niterói) ➔ Saída direta BR-101 Norte atravessando o Espírito Santo ➔ Teixeira de Freitas ➔ Prado / Cumuruxatiba.',
                 departureTip: 'Outubro é o auge da reprodução das baleias Jubarte! Reserve o passeio náutico com antecedência.',
                 weatherForecast: [
@@ -2179,7 +2201,7 @@
                 category: 'familia',
                 categoryLabel: 'Parques & Crianças',
                 funnyTip: 'Feriado de 12 de Outubro é Dia das Crianças: pais com as pernas dormentes nas filas e crianças ligadas no 220V!',
-                image: 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/betocarrero.jpg',
                 routeSummary: 'Fonseca ➔ Ponte ➔ Dutra ➔ Rodoanel Mário Covas (SP) ➔ Régis Bittencourt (BR-116) até Curitiba ➔ BR-101 até Penha (SC).',
                 departureTip: 'No dia 12/10 (Dia das Crianças), adquira o Fast Pass antecipado para furar as filas das montanhas-russas!',
                 weatherForecast: [
@@ -2211,7 +2233,7 @@
                 category: 'praia',
                 categoryLabel: 'Charme & Luxo Rústico',
                 funnyTip: 'Todo mundo desfilando com pose de milionário no Quadrado de Trancoso... até a hora de dividir a conta do jantar!',
-                image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/trancoso.jpg',
                 routeSummary: 'Fonseca (Niterói) ➔ BR-101 Norte direto até Eunápolis ➔ BA-001 sentido Trancoso.',
                 departureTip: 'Excelente opção para revezar a direção com copiloto ou fazer pernoite relaxante no litoral norte do Espírito Santo.',
                 weatherForecast: [
@@ -2243,7 +2265,7 @@
                 category: 'serra',
                 categoryLabel: 'Serra Gaúcha & Fondue',
                 funnyTip: 'A maior road trip da história da família: 20 horas de viagem cruzando 5 estados. Quem dormir no banco de trás paga o pedágio!',
-                image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
+                image: 'assets/destinos/canela.jpg',
                 routeSummary: 'Fonseca ➔ Ponte ➔ Dutra ➔ Régis Bittencourt ➔ Curitiba ➔ BR-101 até Osório ➔ Rota Romântica até Canela.',
                 departureTip: 'A maior road trip da lista! Ideal para quem viaja de motorhome ou gosta de grandes viagens cruzando 5 estados brasileiros.',
                 weatherForecast: [
