@@ -784,6 +784,20 @@
             .brand-box {
                 justify-content: center;
             }
+            .weather-and-votes-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 12px;
+            }
+            .weather-sync-status, .family-votes-summary {
+                justify-content: center;
+                text-align: center;
+            }
+            .btn-refresh-weather {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         /* Destination Card */
@@ -1115,6 +1129,319 @@
             color: var(--accent-coral);
             border-color: var(--accent-coral);
             background: rgba(255, 94, 98, 0.15);
+        }
+
+        /* Weather Sync & Family Heart Voting Bar */
+        .weather-and-votes-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            background: rgba(13, 20, 36, 0.75);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            backdrop-filter: var(--glass-blur);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            margin-top: 6px;
+        }
+
+        [data-theme="light"] .weather-and-votes-bar {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .weather-sync-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-refresh-weather {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(59, 130, 246, 0.2));
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            user-select: none;
+        }
+
+        .btn-refresh-weather:hover {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(59, 130, 246, 0.35));
+            box-shadow: 0 0 16px var(--glow-cyan);
+            transform: translateY(-1px);
+        }
+
+        .btn-refresh-weather:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-refresh-weather-mini {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 240, 255, 0.12);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-refresh-weather-mini:hover {
+            background: rgba(0, 240, 255, 0.25);
+            box-shadow: 0 0 12px var(--glow-cyan);
+        }
+
+        .refresh-spinner {
+            display: inline-block;
+            transition: transform 0.4s ease;
+        }
+
+        .refresh-spinner.spin-active {
+            animation: spinRefresh 0.8s linear infinite;
+        }
+
+        @keyframes spinRefresh {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .badge-period {
+            background: rgba(0, 240, 255, 0.2);
+            color: #fff;
+            font-size: 0.72rem;
+            padding: 2px 7px;
+            border-radius: var(--radius-full);
+            font-weight: 800;
+        }
+
+        .weather-meta-info {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        .family-votes-summary {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .votes-total-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .votes-total-badge {
+            background: rgba(255, 94, 98, 0.15);
+            border: 1px solid rgba(255, 94, 98, 0.4);
+            color: #ff5e62;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-weight: 900;
+            font-size: 0.85rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-sort-by-votes {
+            background: linear-gradient(135deg, rgba(255, 200, 55, 0.15), rgba(255, 128, 8, 0.2));
+            border: 1px solid rgba(255, 200, 55, 0.5);
+            color: #ffc837;
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-sort-by-votes:hover {
+            background: linear-gradient(135deg, #ffc837, #ff8008);
+            color: #070b14;
+            box-shadow: 0 0 14px var(--glow-yellow);
+        }
+
+        /* Heart vote buttons on cards */
+        .btn-heart-vote {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 94, 98, 0.1);
+            border: 1px solid rgba(255, 94, 98, 0.35);
+            color: #ff5e62;
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+            user-select: none;
+        }
+
+        .btn-heart-vote:hover {
+            background: rgba(255, 94, 98, 0.22);
+            border-color: #ff5e62;
+            box-shadow: 0 0 16px rgba(255, 94, 98, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-heart-vote:active {
+            transform: scale(0.92);
+        }
+
+        .btn-heart-vote.heart-bounced {
+            animation: heartPop 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+
+        @keyframes heartPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.28); }
+            100% { transform: scale(1); }
+        }
+
+        .vote-count-num {
+            font-weight: 900;
+            font-size: 0.88rem;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+        }
+
+        /* Card media heart badge */
+        .card-media-heart {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(7, 11, 20, 0.85);
+            border: 1px solid rgba(255, 94, 98, 0.5);
+            border-radius: var(--radius-full);
+            padding: 4px 10px;
+            color: #ff5e62;
+            font-size: 0.78rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            z-index: 5;
+            transition: all var(--transition-fast);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-media-heart:hover {
+            transform: scale(1.1);
+            background: rgba(255, 94, 98, 0.25);
+            border-color: #ff3366;
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.6);
+        }
+
+        .card-media-heart:active {
+            transform: scale(0.92);
+        }
+
+        .vote-media-num {
+            color: #fff;
+            font-weight: 900;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .modal-heart-btn {
+            background: rgba(255, 94, 98, 0.18);
+            border: 1px solid rgba(255, 94, 98, 0.5);
+            color: #ff5e62;
+            padding: 5px 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.82rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-heart-btn:hover {
+            background: rgba(255, 94, 98, 0.3);
+            box-shadow: 0 0 15px rgba(255, 94, 98, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Floating heart burst animation */
+        .floating-heart-burst {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999999;
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #ff3366;
+            text-shadow: 0 0 12px rgba(255, 51, 102, 0.8), 0 2px 5px rgba(0,0,0,0.6);
+            transform: translate(-50%, -50%);
+            animation: floatHeartUp 0.85s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        @keyframes floatHeartUp {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.6);
+            }
+            40% {
+                opacity: 1;
+                transform: translate(-50%, -70px) scale(1.3);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -130px) scale(0.9);
+            }
+        }
+
+        /* Site Toast Notification */
+        .site-toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(30px);
+            background: rgba(13, 20, 36, 0.95);
+            border: 1px solid var(--accent-cyan);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.35);
+            z-index: 999999;
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            max-width: 90vw;
+            text-align: center;
+        }
+
+        .site-toast.toast-show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         /* Modal / Drawer */
@@ -1728,6 +2055,7 @@
                     <label class="sort-label" for="sort-select">Ordenar por:</label>
                     <select id="sort-select" class="sort-select" onchange="handleSortChange()">
                         <option value="time-asc" selected>⏱️ Menor Tempo (Padrão)</option>
+                        <option value="votes-desc">❤️ Mais Votados pela Família</option>
                         <option value="dist-asc">🛣️ Menor Distância</option>
                         <option value="cost-asc">💰 Menor Custo Estimado</option>
                         <option value="name-asc">🔤 Nome da Cidade (A-Z)</option>
@@ -1745,6 +2073,26 @@
                 <button class="filter-pill" onclick="setTimeFilter('short', this)">⚡ Curtas (&lt; 6h)</button>
                 <button class="filter-pill" onclick="setTimeFilter('medium', this)">🚗 Médias (6h a 10h)</button>
                 <button class="filter-pill" onclick="setTimeFilter('long', this)">🛣️ Road Trips (&gt; 10h)</button>
+            </div>
+
+            <!-- Weather Sync & Family Heart Voting Bar -->
+            <div class="weather-and-votes-bar">
+                <div class="weather-sync-status">
+                    <button class="btn-refresh-weather" id="btn-refresh-weather" onclick="refreshAllWeather(true)" title="Consultar Open-Meteo ao vivo para todos os 14 destinos de 09/10 a 12/10">
+                        <span class="refresh-spinner" id="weather-spinner">🔄</span>
+                        <span id="weather-btn-label">Atualizar Previsão ao Vivo</span>
+                        <span class="badge-period">09/10 a 12/10</span>
+                    </button>
+                    <span class="weather-meta-info" id="weather-meta-info">🛰️ Satélite Open-Meteo • 09/10 a 12/10</span>
+                </div>
+
+                <div class="family-votes-summary">
+                    <span class="votes-total-label">❤️ Votação da Família:</span>
+                    <span class="votes-total-badge" id="total-family-votes">0 votos</span>
+                    <button class="btn-sort-by-votes" onclick="sortByVotes()" title="Ordenar cards pelo ranking dos mais votados">
+                        🏆 Mais Votados
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -1764,9 +2112,12 @@
                 <img id="m-cover" src="" alt="">
                 <div class="modal-hero-overlay"></div>
                 <div class="modal-header-content">
-                    <div style="display:flex; gap: 8px; margin-bottom: 8px;">
+                    <div style="display:flex; gap: 8px; margin-bottom: 8px; align-items: center; flex-wrap: wrap;">
                         <span class="card-rank-badge" id="m-rank">#1</span>
                         <span class="card-category-badge" id="m-category">Serra</span>
+                        <button class="modal-heart-btn" id="m-vote-btn" onclick="" title="Clique para somar voto da família!">
+                            ❤️ <span id="m-vote-count">0</span> votos
+                        </button>
                     </div>
                     <h2 id="m-title">Nome da Cidade</h2>
                     <div class="card-location" id="m-location">Estado • Partindo do Fonseca, Niterói</div>
@@ -1796,7 +2147,10 @@
 
                 <!-- 4-Day Detailed Weather Forecast -->
                 <div>
-                    <h3 class="modal-section-title"><span>⛅</span> Previsão do Tempo no Feriadão (09/10 a 12/10)</h3>
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                        <h3 class="modal-section-title" style="margin-bottom: 0;"><span>⛅</span> Previsão do Tempo no Feriadão (09/10 a 12/10)</h3>
+                        <button class="btn-refresh-weather-mini" onclick="refreshAllWeather(true)">🔄 Atualizar ao Vivo</button>
+                    </div>
                     <div class="weather-detail-grid" id="m-weather-grid">
                         <!-- Dynamic -->
                     </div>
@@ -2343,11 +2697,74 @@
         let favorites = JSON.parse(localStorage.getItem('fav_trips') || '[]');
         let compareList = JSON.parse(localStorage.getItem('compare_trips') || '[]');
 
+        // FAMILY HEART VOTES STATE (PERSISTENT & CUMULATIVE)
+        const DEFAULT_VOTES = {
+            penedo: 14,
+            paraty: 19,
+            ubatuba: 16,
+            ouropreto: 12,
+            ilhabela: 18,
+            brumadinho: 9,
+            domingosmartins: 11,
+            vitoria: 10,
+            diamantina: 8,
+            canastra: 15,
+            costabaleias: 13,
+            betocarrero: 21,
+            trancoso: 17,
+            canela: 15
+        };
+
+        let familyVotes = JSON.parse(localStorage.getItem('family_heart_votes') || 'null');
+        if (!familyVotes) {
+            familyVotes = { ...DEFAULT_VOTES };
+            localStorage.setItem('family_heart_votes', JSON.stringify(familyVotes));
+        }
+
+        // GPS COORDINATES FOR ALL 14 DESTINATIONS FOR OPEN-METEO WEATHER API
+        const CITY_COORDINATES = {
+            penedo: { lat: -22.44, lon: -44.53, name: 'Penedo' },
+            paraty: { lat: -23.22, lon: -44.71, name: 'Paraty' },
+            ubatuba: { lat: -23.43, lon: -45.07, name: 'Ubatuba' },
+            ouropreto: { lat: -20.38, lon: -43.50, name: 'Ouro Preto' },
+            ilhabela: { lat: -23.78, lon: -45.36, name: 'Ilhabela' },
+            brumadinho: { lat: -20.14, lon: -44.20, name: 'Brumadinho' },
+            domingosmartins: { lat: -20.36, lon: -40.66, name: 'Domingos Martins' },
+            vitoria: { lat: -20.32, lon: -40.34, name: 'Vitória' },
+            diamantina: { lat: -18.25, lon: -43.60, name: 'Diamantina' },
+            canastra: { lat: -20.24, lon: -46.36, name: 'Serra da Canastra' },
+            costabaleias: { lat: -17.34, lon: -39.22, name: 'Costa das Baleias' },
+            betocarrero: { lat: -26.77, lon: -48.65, name: 'Beto Carrero' },
+            trancoso: { lat: -16.59, lon: -39.10, name: 'Trancoso' },
+            canela: { lat: -29.36, lon: -50.81, name: 'Canela' }
+        };
+
+        // RESTORE CACHED WEATHER IF SAVED IN LOCALSTORAGE
+        try {
+            const cachedWeather = JSON.parse(localStorage.getItem('cached_weather_forecasts') || 'null');
+            if (cachedWeather) {
+                destinations.forEach(dest => {
+                    if (cachedWeather[dest.id]) {
+                        dest.weatherForecast = cachedWeather[dest.id];
+                    }
+                });
+            }
+        } catch(e) {
+            console.error('Erro ao restaurar clima salvo:', e);
+        }
+
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
             updateCompareBadge();
+            updateTotalVotesDisplay();
             renderDestinations();
             updateCalculator();
+
+            const cachedTime = localStorage.getItem('cached_weather_time');
+            if (cachedTime) {
+                const info = document.getElementById('weather-meta-info');
+                if (info) info.innerHTML = `🛰️ <strong>Open-Meteo</strong> • Atualizado às ${cachedTime}`;
+            }
         });
 
         // CALCULATOR CALCULATIONS
@@ -2454,6 +2871,7 @@
                 return true;
             }).sort((a, b) => {
                 if (currentSort === 'time-asc') return a.timeHours - b.timeHours;
+                if (currentSort === 'votes-desc') return (familyVotes[b.id] || 0) - (familyVotes[a.id] || 0);
                 if (currentSort === 'dist-asc') return a.distKm - b.distKm;
                 if (currentSort === 'cost-asc') {
                     const costA = (a.distKm / kmPerLiter) * gasPrice;
@@ -2485,6 +2903,7 @@
                 const fuel = getFuelMetrics(city.distKm);
                 const isFav = favorites.includes(city.id);
                 const isCompared = compareList.includes(city.id);
+                const votes = familyVotes[city.id] || 0;
 
                 return `
                     <article class="dest-card" id="card-${city.id}">
@@ -2492,7 +2911,10 @@
                             <img src="${city.image}" alt="${city.name}" class="card-img" loading="lazy">
                             <div class="card-overlay"></div>
                             <span class="card-rank-badge">#${city.rank} • Mais Próximo</span>
-                            <span class="card-category-badge">${city.categoryLabel}</span>
+                            <button class="card-media-heart" onclick="voteHeart('${city.id}', event)" title="Clique para somar voto da família! (Persistente)">
+                                <span>❤️</span>
+                                <span class="vote-media-num" id="media-vote-${city.id}">${votes}</span>
+                            </button>
                             <div class="card-header-info">
                                 <h2>${city.name}</h2>
                                 <div class="card-location">📍 ${city.state} • Partida Niterói (Fonseca)</div>
@@ -2557,18 +2979,20 @@
 
                             <!-- Highlights tags -->
                             <div class="tags-cluster">
-                                ${city.highlights.slice(0, 4).map(tag => `<span class="highlight-tag">📍 ${tag}</span>`).join('')}
+                                <span class="highlight-tag" style="color: var(--accent-cyan); border-color: rgba(0,240,255,0.3);">🏷️ ${city.categoryLabel}</span>
+                                ${city.highlights.slice(0, 3).map(tag => `<span class="highlight-tag">📍 ${tag}</span>`).join('')}
                             </div>
 
                             <!-- Card Actions -->
                             <div class="card-actions">
                                 <button class="btn-view-details" onclick="openModal('${city.id}')">
-                                    <span>Ver Roteiro Completo</span>
+                                    <span>Ver Roteiro</span>
                                     <span>➔</span>
                                 </button>
                                 
-                                <button class="btn-icon-action ${isFav ? 'fav-active' : ''}" onclick="toggleFavorite('${city.id}')" title="Favoritar">
-                                    ${isFav ? '❤️' : '🤍'}
+                                <button class="btn-heart-vote" onclick="voteHeart('${city.id}', event)" title="Clique para somar voto da família! (Persistente)">
+                                    <span class="heart-pulse-icon">❤️</span>
+                                    <span class="vote-count-num" id="vote-count-${city.id}">${votes}</span>
                                 </button>
 
                                 <button class="btn-icon-action" onclick="toggleCompare('${city.id}')" title="${isCompared ? 'Remover da Comparação' : 'Adicionar à Comparação'}" style="${isCompared ? 'border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(0,240,255,0.15);' : ''}">
@@ -2639,6 +3063,17 @@
             document.getElementById('m-route-desc').innerText = city.routeSummary;
             document.getElementById('m-route-tip').innerText = `💡 Dica de Saída do Fonseca (Niterói): ${city.departureTip}`;
 
+            // Modal heart vote button
+            const mVoteBtn = document.getElementById('m-vote-btn');
+            const mVoteCount = document.getElementById('m-vote-count');
+            if (mVoteBtn && mVoteCount) {
+                mVoteCount.innerText = familyVotes[city.id] || 0;
+                mVoteBtn.onclick = (e) => {
+                    voteHeart(city.id, e);
+                    mVoteCount.innerText = familyVotes[city.id] || 0;
+                };
+            }
+
             // Weather detail grid
             document.getElementById('m-weather-grid').innerHTML = city.weatherForecast.map(w => `
                 <div class="weather-detail-card">
@@ -2684,6 +3119,205 @@
         function handleModalBackdropClick(e) {
             if (e.target.id === 'detail-modal') {
                 closeModal();
+            }
+        }
+
+        // FAMILY HEART VOTES - SUM CLICKS & PERSIST
+        function voteHeart(id, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            familyVotes[id] = (familyVotes[id] || 0) + 1;
+            localStorage.setItem('family_heart_votes', JSON.stringify(familyVotes));
+
+            // Immediate DOM updates
+            const btnCount = document.getElementById(`vote-count-${id}`);
+            if (btnCount) btnCount.innerText = familyVotes[id];
+
+            const mediaBadge = document.getElementById(`media-vote-${id}`);
+            if (mediaBadge) mediaBadge.innerText = familyVotes[id];
+
+            const modalCount = document.getElementById(`m-vote-count`);
+            if (modalCount) modalCount.innerText = familyVotes[id];
+
+            // Bounce animation on heart button
+            const card = document.getElementById(`card-${id}`);
+            if (card) {
+                const btn = card.querySelector('.btn-heart-vote');
+                if (btn) {
+                    btn.classList.add('heart-bounced');
+                    setTimeout(() => btn.classList.remove('heart-bounced'), 400);
+                }
+            }
+
+            updateTotalVotesDisplay();
+            createFloatingHeart(event);
+
+            if (currentSort === 'votes-desc') {
+                renderDestinations();
+            }
+        }
+
+        function updateTotalVotesDisplay() {
+            const total = Object.values(familyVotes).reduce((sum, v) => sum + v, 0);
+            const badge = document.getElementById('total-family-votes');
+            if (badge) badge.innerText = `${total} votos`;
+        }
+
+        function sortByVotes() {
+            currentSort = 'votes-desc';
+            const select = document.getElementById('sort-select');
+            if (select) select.value = 'votes-desc';
+            renderDestinations();
+            showToastMessage('🏆 Destinos ordenados pelos Mais Votados da Família!');
+            const grid = document.getElementById('destinations-grid');
+            if (grid) grid.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function createFloatingHeart(event) {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart-burst';
+            heart.innerHTML = '❤️ +1';
+            
+            let x = window.innerWidth / 2;
+            let y = window.innerHeight / 2;
+            if (event && event.clientX) {
+                x = event.clientX;
+                y = event.clientY;
+            }
+            
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 850);
+        }
+
+        // SITE TOAST NOTIFICATION
+        function showToastMessage(msg, duration = 3500) {
+            const toast = document.getElementById('site-toast');
+            if (!toast) return;
+            toast.innerHTML = msg;
+            toast.style.display = 'flex';
+            requestAnimationFrame(() => {
+                toast.classList.add('toast-show');
+            });
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toast.classList.remove('toast-show');
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 350);
+            }, duration);
+        }
+
+        // WMO WEATHER CODES TRANSLATION
+        function getWMOInfo(code) {
+            if (code === 0) return { icon: '☀️', desc: 'Céu limpo' };
+            if (code === 1) return { icon: '🌤️', desc: 'Ensolarado c/ nuvens esparsas' };
+            if (code === 2) return { icon: '⛅', desc: 'Parcialmente nublado' };
+            if (code === 3) return { icon: '☁️', desc: 'Nublado' };
+            if (code === 45 || code === 48) return { icon: '🌫️', desc: 'Nevoeiro matinal' };
+            if (code === 51 || code === 53 || code === 55) return { icon: '🌦️', desc: 'Garoa leve' };
+            if (code === 61 || code === 63 || code === 65) return { icon: '🌧️', desc: 'Chuva' };
+            if (code === 71 || code === 73 || code === 75) return { icon: '🌨️', desc: 'Geada / Frio extremo' };
+            if (code === 80 || code === 81 || code === 82) return { icon: '🌦️', desc: 'Pancadas de chuva' };
+            if (code >= 95) return { icon: '⛈️', desc: 'Tempestade com trovoada' };
+            return { icon: '🌤️', desc: 'Tempo variável' };
+        }
+
+        // DYNAMIC WEATHER REFRESH (OPEN-METEO BATCH API)
+        async function refreshAllWeather(showToast = true) {
+            const btn = document.getElementById('btn-refresh-weather');
+            const spinner = document.getElementById('weather-spinner');
+            const label = document.getElementById('weather-btn-label');
+            const info = document.getElementById('weather-meta-info');
+
+            if (btn) btn.disabled = true;
+            if (spinner) spinner.classList.add('spin-active');
+            if (label) label.innerText = 'Consultando satélites...';
+            if (info) info.innerText = '📡 Conectando ao modelo Open-Meteo (09/10 a 12/10)...';
+
+            try {
+                const lats = destinations.map(d => CITY_COORDINATES[d.id].lat).join(',');
+                const lons = destinations.map(d => CITY_COORDINATES[d.id].lon).join(',');
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&timezone=America%2FSao_Paulo&start_date=2026-10-09&end_date=2026-10-12`;
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+
+                const dataArray = await response.json();
+                const results = Array.isArray(dataArray) ? dataArray : [dataArray];
+
+                const daysPt = ['Quinta', 'Sexta', 'Sábado', 'Domingo'];
+                const datesFormatted = ['09/10', '10/10', '11/10', '12/10'];
+
+                const updatedForecasts = {};
+
+                results.forEach((cityData, index) => {
+                    const dest = destinations[index];
+                    if (!dest || !cityData.daily) return;
+
+                    const daily = cityData.daily;
+                    const newForecast = [];
+
+                    for (let i = 0; i < 4; i++) {
+                        const wCode = daily.weathercode ? daily.weathercode[i] : 2;
+                        const tMax = Math.round(daily.temperature_2m_max[i]);
+                        const tMin = Math.round(daily.temperature_2m_min[i]);
+                        const precip = (daily.precipitation_sum && daily.precipitation_sum[i] !== null) ? daily.precipitation_sum[i].toFixed(1) : '0.0';
+                        const prob = (daily.precipitation_probability_max && daily.precipitation_probability_max[i] !== null) ? daily.precipitation_probability_max[i] : 0;
+                        
+                        const wInfo = getWMOInfo(wCode);
+                        const desc = `${wInfo.desc} (${prob}% prob., ${precip}mm)`;
+
+                        newForecast.push({
+                            date: datesFormatted[i] || `Dia ${i+1}`,
+                            day: daysPt[i] || '',
+                            icon: wInfo.icon,
+                            temp: `${tMin}° - ${tMax}°C`,
+                            desc: desc
+                        });
+                    }
+
+                    dest.weatherForecast = newForecast;
+                    updatedForecasts[dest.id] = newForecast;
+                });
+
+                // Persist to localStorage
+                localStorage.setItem('cached_weather_forecasts', JSON.stringify(updatedForecasts));
+                const now = new Date();
+                const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                localStorage.setItem('cached_weather_time', timeStr);
+
+                renderDestinations();
+
+                if (info) {
+                    info.innerHTML = `✅ <strong>Satélite Open-Meteo</strong> • Atualizado hoje às ${timeStr}`;
+                }
+                if (label) label.innerText = 'Previsão Atualizada!';
+
+                if (showToast) {
+                    showToastMessage('🌤️ Previsão atualizada com sucesso para todas as 14 cidades (09/10 a 12/10)!');
+                }
+            } catch (err) {
+                console.error('Erro ao atualizar clima:', err);
+                if (info) {
+                    info.innerText = '⚠️ Falha ao conectar ao satélite. Usando dados salvos.';
+                }
+                if (showToast) {
+                    showToastMessage('⚠️ Falha temporária na conexão meteorológica. Dados preservados.');
+                }
+            } finally {
+                if (btn) btn.disabled = false;
+                if (spinner) spinner.classList.remove('spin-active');
+                setTimeout(() => {
+                    if (label) label.innerText = 'Atualizar Previsão ao Vivo';
+                }, 3500);
             }
         }
 
@@ -2831,5 +3465,7 @@
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
     </script>
+    <!-- Site Toast Notification -->
+    <div id="site-toast" class="site-toast" style="display: none;"></div>
 </body>
 </html>
