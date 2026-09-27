@@ -1,99 +1,2426 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roteiros de Viagem</title>
+    <title>Expedições Feriadão 12 de Outubro | Roteiros a partir de Niterói</title>
+    <meta name="description" content="Guia interativo de viagens para o feriado de 09/10 a 12/10 saindo de Fonseca, Niterói (CEP 24120-210). 14 destinos ordenados por tempo, consumo de combustível e previsão do tempo.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
-        h1 { text-align: center; color: #2c3e50; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border-left: 5px solid #3498db; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        .card h2 { margin: 0 0 10px 0; font-size: 1.2rem; color: #2980b9; }
-        .card p { margin: 5px 0; font-size: 0.9rem; }
-        
-        /* Modal Styles */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
-        .modal-content { background-color: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #7f8c8d; }
-        .close:hover { color: #e74c3c; }
-        .modal h2 { margin-top: 0; color: #2c3e50; }
-        .tourist-links { margin-top: 20px; }
-        .tourist-links a { display: block; margin: 8px 0; color: #3498db; text-decoration: none; font-weight: bold; }
-        .tourist-links a:hover { text-decoration: underline; }
+        :root {
+            --bg-primary: #070b14;
+            --bg-secondary: #0d1424;
+            --bg-card: rgba(16, 24, 44, 0.75);
+            --bg-card-hover: rgba(22, 33, 60, 0.9);
+            --bg-modal: #0d1527;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(0, 240, 255, 0.4);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            
+            --accent-cyan: #00f0ff;
+            --accent-blue: #3b82f6;
+            --accent-coral: #ff5e62;
+            --accent-orange: #ff9966;
+            --accent-emerald: #10b981;
+            --accent-purple: #a855f7;
+            --accent-amber: #f59e0b;
+            
+            --glow-cyan: rgba(0, 240, 255, 0.2);
+            --glow-coral: rgba(255, 94, 98, 0.2);
+            
+            --glass-bg: rgba(13, 20, 36, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: blur(16px);
+            
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-card-hover: rgba(255, 255, 255, 1);
+            --bg-modal: #ffffff;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(59, 130, 246, 0.5);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-dim: #94a3b8;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glow-cyan: rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.5;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 85% 35%, rgba(255, 94, 98, 0.05) 0%, transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, h4, h5, .brand-font {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        /* Ambient Glow & Grid lines */
+        .ambient-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Top Navigation Header */
+        .nav-header {
+            position: sticky;
+            top: 16px;
+            z-index: 100;
+            margin-bottom: 24px;
+        }
+
+        .nav-inner {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            transition: var(--transition-fast);
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 20px var(--glow-cyan);
+        }
+
+        .brand-text h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(90deg, #ffffff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        [data-theme="light"] .brand-text h1 {
+            background: linear-gradient(90deg, #0f172a, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-text span {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle-btn, .compare-toggle-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-fast);
+        }
+
+        .theme-toggle-btn:hover, .compare-toggle-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.08);
+        }
+
+        .badge-count {
+            background: var(--accent-coral);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 24px 0 36px 0;
+            text-align: center;
+        }
+
+        .origin-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            padding: 6px 16px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 16px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+            animation: pulse-glow 3s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.1); }
+            100% { box-shadow: 0 0 25px rgba(0, 240, 255, 0.3); }
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, #ffffff 20%, var(--accent-cyan) 60%, var(--accent-orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        [data-theme="light"] .hero-title .gradient-text {
+            background: linear-gradient(135deg, #0f172a 20%, #2563eb 60%, #ea580c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 760px;
+            margin: 0 auto 28px auto;
+        }
+
+        .hero-badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .meta-badge {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .meta-badge strong {
+            color: var(--accent-cyan);
+        }
+
+        /* Interactive Travel Calculator Box */
+        .calculator-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 36px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue), var(--accent-orange), var(--accent-coral));
+        }
+
+        .calc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 14px;
+        }
+
+        .calc-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .calc-title span {
+            font-size: 1.3rem;
+        }
+
+        .calc-trip-toggle {
+            display: flex;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
+        }
+
+        .trip-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 16px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: var(--transition-fast);
+        }
+
+        .trip-btn.active {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #070b14;
+            box-shadow: 0 0 12px var(--glow-cyan);
+            font-weight: 700;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            align-items: center;
+        }
+
+        .calc-control {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .control-label .val-display {
+            color: var(--accent-cyan);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .slider-wrapper input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            accent-color: var(--accent-cyan);
+            cursor: pointer;
+        }
+
+        .calc-summary-stat {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.2;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Filter & Sorting Controls */
+        .controls-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .search-and-sort {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 260px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 12px 18px 12px 42px;
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition-fast);
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px var(--glow-cyan);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .sort-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .sort-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        .sort-select {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .sort-select:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .filter-tags-row {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+        }
+
+        .filter-tags-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 7px 16px;
+            border-radius: var(--radius-full);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-pill:hover {
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-pill.active {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(59, 130, 246, 0.2));
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 12px var(--glow-cyan);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 28px;
+            margin-bottom: 48px;
+        }
+
+        @media (max-width: 640px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Destination Card */
+        .dest-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-smooth);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .dest-card:hover {
+            transform: translateY(-7px);
+            border-color: var(--border-hover);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35), 0 0 25px var(--glow-cyan);
+        }
+
+        .card-media {
+            height: 210px;
+            position: relative;
+            overflow: hidden;
+            background: #111827;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .dest-card:hover .card-img {
+            transform: scale(1.08);
+        }
+
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(7, 11, 20, 0.95) 0%, rgba(7, 11, 20, 0.3) 50%, rgba(0, 0, 0, 0.2) 100%);
+        }
+
+        [data-theme="light"] .card-overlay {
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(0, 0, 0, 0.1) 100%);
+        }
+
+        .card-rank-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: rgba(7, 11, 20, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            color: var(--accent-cyan);
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-category-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(7, 11, 20, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+        }
+
+        .card-header-info {
+            position: absolute;
+            bottom: 14px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .card-header-info h2 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            margin-bottom: 2px;
+        }
+
+        [data-theme="light"] .card-header-info h2 {
+            color: var(--text-main);
+            text-shadow: none;
+        }
+
+        .card-location {
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+
+        /* Route Key Metrics Grid */
+        .route-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+        }
+
+        .metric-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .metric-icon {
+            font-size: 1.2rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .metric-data {
+            line-height: 1.2;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .metric-val {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .metric-val.highlight-time {
+            color: var(--accent-cyan);
+        }
+
+        .metric-val.highlight-cost {
+            color: var(--accent-orange);
+        }
+
+        /* 4-Day Mini Weather Strip */
+        .weather-holiday-strip {
+            background: rgba(0, 240, 255, 0.03);
+            border: 1px solid rgba(0, 240, 255, 0.12);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+        }
+
+        .weather-strip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .weather-strip-header span {
+            color: var(--accent-cyan);
+        }
+
+        .weather-days-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
+        .mini-day-col {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-sm);
+            padding: 6px 4px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .mini-date {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--text-dim);
+        }
+
+        .mini-icon {
+            font-size: 1.05rem;
+            margin: 2px 0;
+        }
+
+        .mini-temp {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Highlights tags */
+        .tags-cluster {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .highlight-tag {
+            font-size: 0.72rem;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        /* Card Action Buttons */
+        .card-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 8px;
+            padding-top: 8px;
+        }
+
+        .btn-view-details {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(59, 130, 246, 0.25));
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-view-details:hover {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: #070b14;
+            box-shadow: 0 0 18px var(--glow-cyan);
+        }
+
+        .btn-icon-action {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            text-decoration: none;
+        }
+
+        .btn-icon-action:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .btn-icon-action.fav-active {
+            color: var(--accent-coral);
+            border-color: var(--accent-coral);
+            background: rgba(255, 94, 98, 0.15);
+        }
+
+        /* Modal / Drawer */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-container {
+            background: var(--bg-modal);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 820px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px) scale(0.97); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: var(--transition-fast);
+        }
+
+        .modal-close-btn:hover {
+            background: var(--accent-coral);
+            border-color: var(--accent-coral);
+            transform: rotate(90deg);
+        }
+
+        .modal-hero-cover {
+            height: 280px;
+            position: relative;
+        }
+
+        .modal-hero-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg-modal) 0%, rgba(13, 21, 39, 0.4) 60%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .modal-header-content {
+            position: absolute;
+            bottom: 20px;
+            left: 28px;
+            right: 28px;
+        }
+
+        .modal-header-content h2 {
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .modal-body {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .modal-section-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .modal-section-title span {
+            color: var(--accent-cyan);
+        }
+
+        /* Route Advice Banner */
+        .route-advice-box {
+            background: rgba(59, 130, 246, 0.08);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: 16px 20px;
+        }
+
+        .route-advice-box h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .route-advice-box p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Modal Weather Grid */
+        .weather-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .weather-detail-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .wd-date {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .wd-icon {
+            font-size: 2rem;
+            margin: 4px 0;
+        }
+
+        .wd-temp {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .wd-desc {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            line-height: 1.3;
+        }
+
+        /* Itinerary Timeline */
+        .itinerary-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .itinerary-timeline::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            bottom: 8px;
+            left: 5px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-blue), var(--accent-coral));
+        }
+
+        .timeline-item {
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -19px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        .timeline-day-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .timeline-day-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Attractions Links & Gastronomy */
+        .attractions-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .attraction-link-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition-fast);
+        }
+
+        .attraction-link-card:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .alc-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .alc-arrow {
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+        }
+
+        .gastronomy-card {
+            background: rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+        }
+
+        .gastronomy-card h4 {
+            color: var(--accent-amber);
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gastronomy-card p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        /* Modal External Maps CTA */
+        .modal-nav-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-nav-map {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition-fast);
+        }
+
+        .btn-gmaps {
+            background: #4285f4;
+            color: white;
+        }
+
+        .btn-gmaps:hover {
+            background: #3367d6;
+            box-shadow: 0 0 15px rgba(66, 133, 244, 0.4);
+        }
+
+        .btn-waze {
+            background: #33ccff;
+            color: #070b14;
+        }
+
+        .btn-waze:hover {
+            background: #00bfff;
+            box-shadow: 0 0 15px rgba(51, 204, 255, 0.4);
+        }
+
+        /* Comparison Drawer */
+        .compare-modal-content {
+            padding: 28px;
+        }
+
+        .compare-table-wrapper {
+            overflow-x: auto;
+            margin-top: 18px;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        .compare-table th, .compare-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .compare-table th {
+            color: var(--text-dim);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .compare-table td {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0;
+            margin-top: 60px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        footer p {
+            margin-bottom: 6px;
+        }
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px dashed var(--border-color);
+        }
+
+        .empty-state span {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--text-dim);
+        }
     </style>
 </head>
 <body>
 
-    <h1>Roteiros a partir de Niterói</h1>
-    <div class="grid" id="card-container"></div>
+    <div class="ambient-glow"></div>
 
-    <!-- Modal -->
-    <div id="cityModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modal-title">Nome da Cidade</h2>
-            <p><strong>Detalhes:</strong> <span id="modal-details"></span></p>
-            <p><strong>Clima Previsto:</strong> <span id="modal-weather"></span></p>
-            <div class="tourist-links">
-                <h3>Pontos Turísticos:</h3>
-                <div id="modal-links"></div>
+    <div class="container">
+        
+        <!-- Navigation Header -->
+        <header class="nav-header">
+            <div class="nav-inner">
+                <a href="#" class="brand-box" id="brand-link">
+                    <div class="brand-icon">🚗</div>
+                    <div class="brand-text">
+                        <h1>Expedições 12 de Outubro</h1>
+                        <span>Partida: Fonseca, Niterói - RJ (CEP 24120-210)</span>
+                    </div>
+                </a>
+
+                <div class="nav-actions">
+                    <button class="compare-toggle-btn" id="btn-toggle-compare" onclick="openCompareModal()">
+                        ⚖️ Comparar <span class="badge-count" id="compare-badge">0</span>
+                    </button>
+                    <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()">
+                        🌓 Tema
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="origin-pill">
+                📍 Ponto de Partida: Fonseca, Niterói - RJ (CEP: 24120-210)
+            </div>
+            
+            <h1 class="hero-title">
+                Destinos Imperdíveis no <br><span class="gradient-text">Feriadão de 12 de Outubro</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                14 roteiros calculados minuciosamente saindo do seu CEP. Ordenados do <strong>menor tempo de viagem para o maior</strong>, com previsão do tempo exclusiva para os 4 dias (09/10 a 12/10) e cálculo dinâmico de combustível a 13 km/l.
+            </p>
+
+            <div class="hero-badges-row">
+                <div class="meta-badge">📅 Período: <strong>09/10 a 12/10</strong></div>
+                <div class="meta-badge">⛽ Consumo Referência: <strong>13 km/L (Gasolina)</strong></div>
+                <div class="meta-badge">⏱️ Menor Tempo: <strong>2h 45m (Penedo)</strong></div>
+                <div class="meta-badge">🛣️ Maior Distância: <strong>1.530 km (Canela)</strong></div>
+            </div>
+        </section>
+
+        <!-- Travel & Fuel Calculator Widget -->
+        <section class="calculator-card" id="trip-calculator">
+            <div class="calc-header">
+                <div class="calc-title">
+                    <span>⛽</span>
+                    <div>
+                        <h3>Calculadora Interativa de Viagem</h3>
+                        <small style="color: var(--text-dim);">Ajuste o preço e autonomia para recalcular todos os destinos em tempo real</small>
+                    </div>
+                </div>
+
+                <div class="calc-trip-toggle">
+                    <button class="trip-btn active" id="btn-ida" onclick="setTripMode('ida')">Apenas Ida</button>
+                    <button class="trip-btn" id="btn-ida-volta" onclick="setTripMode('ida-volta')">Ida e Volta (2x)</button>
+                </div>
+            </div>
+
+            <div class="calc-grid">
+                <!-- Preço da Gasolina -->
+                <div class="calc-control">
+                    <div class="control-label">
+                        <span>Preço da Gasolina:</span>
+                        <span class="val-display" id="gas-price-val">R$ 6,10 / L</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="gas-price-slider" min="5.00" max="8.00" step="0.05" value="6.10" oninput="updateCalculator()">
+                    </div>
+                </div>
+
+                <!-- Consumo Médio -->
+                <div class="calc-control">
+                    <div class="control-label">
+                        <span>Consumo Médio:</span>
+                        <span class="val-display" id="km-per-l-val">13.0 km / L</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="km-per-l-slider" min="8.0" max="20.0" step="0.5" value="13.0" oninput="updateCalculator()">
+                    </div>
+                </div>
+
+                <!-- Resumo Menor Custo -->
+                <div class="calc-summary-stat">
+                    <div>
+                        <div class="stat-label">Destino Mais Econômico:</div>
+                        <strong style="color: var(--accent-cyan); font-size: 0.95rem;">Penedo (RJ)</strong>
+                    </div>
+                    <div class="stat-value" id="min-cost-display">R$ 91,50</div>
+                </div>
+
+                <!-- Resumo Maior Custo -->
+                <div class="calc-summary-stat">
+                    <div>
+                        <div class="stat-label">Destino Mais Distante:</div>
+                        <strong style="color: var(--accent-coral); font-size: 0.95rem;">Canela (RS)</strong>
+                    </div>
+                    <div class="stat-value" id="max-cost-display">R$ 717,97</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls Bar: Search, Category Filters, Sorting -->
+        <section class="controls-bar">
+            <div class="search-and-sort">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Buscar por cidade, estado (RJ, MG, SP, ES, BA, SC, RS) ou atração..." oninput="handleSearch()">
+                </div>
+
+                <div class="sort-group">
+                    <label class="sort-label" for="sort-select">Ordenar por:</label>
+                    <select id="sort-select" class="sort-select" onchange="handleSortChange()">
+                        <option value="time-asc" selected>⏱️ Menor Tempo (Recomendado)</option>
+                        <option value="dist-asc">🛣️ Menor Distância</option>
+                        <option value="cost-asc">💰 Menor Custo Estimado</option>
+                        <option value="name-asc">🔤 Nome da Cidade (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-tags-row">
+                <button class="filter-pill active" onclick="setCategoryFilter('all', this)">✨ Todos (14)</button>
+                <button class="filter-pill" onclick="setCategoryFilter('praia', this)">🏖️ Praias & Litoral</button>
+                <button class="filter-pill" onclick="setCategoryFilter('serra', this)">⛰️ Serras & Montanhas</button>
+                <button class="filter-pill" onclick="setCategoryFilter('historico', this)">🏛️ Histórico & Barroco</button>
+                <button class="filter-pill" onclick="setCategoryFilter('aventura', this)">🧭 Aventura & Natureza</button>
+                <button class="filter-pill" onclick="setCategoryFilter('familia', this)">🎢 Parques & Família</button>
+                <button class="filter-pill" onclick="setTimeFilter('short', this)">⚡ Curtas (&lt; 6h)</button>
+                <button class="filter-pill" onclick="setTimeFilter('medium', this)">🚗 Médias (6h a 10h)</button>
+                <button class="filter-pill" onclick="setTimeFilter('long', this)">🛣️ Road Trips (&gt; 10h)</button>
+            </div>
+        </section>
+
+        <!-- Destination Cards Grid -->
+        <main class="cards-grid" id="destinations-grid">
+            <!-- Injected via JavaScript -->
+        </main>
+
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal-overlay" id="detail-modal" onclick="handleModalBackdropClick(event)">
+        <div class="modal-container">
+            <button class="modal-close-btn" onclick="closeModal()" title="Fechar">&times;</button>
+            
+            <div class="modal-hero-cover">
+                <img id="m-cover" src="" alt="">
+                <div class="modal-hero-overlay"></div>
+                <div class="modal-header-content">
+                    <div style="display:flex; gap: 8px; margin-bottom: 8px;">
+                        <span class="card-rank-badge" id="m-rank">#1</span>
+                        <span class="card-category-badge" id="m-category">Serra</span>
+                    </div>
+                    <h2 id="m-title">Nome da Cidade</h2>
+                    <div class="card-location" id="m-location">Estado • Partindo do Fonseca, Niterói</div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <!-- Metrics Bar -->
+                <div class="route-metrics" id="m-metrics">
+                    <!-- Dynamic -->
+                </div>
+
+                <!-- Route Highway Advice -->
+                <div>
+                    <h3 class="modal-section-title"><span>🛣️</span> Rota & Dicas de Trânsito</h3>
+                    <div class="route-advice-box">
+                        <h4 id="m-route-name">🚗 Rodovias Utilizadas</h4>
+                        <p id="m-route-desc">Detalhes da rodovia...</p>
+                        <p style="margin-top: 8px; font-weight: 600; color: var(--accent-orange);" id="m-route-tip">💡 Dica de Saída de Niterói: ...</p>
+                    </div>
+                </div>
+
+                <!-- 4-Day Detailed Weather Forecast -->
+                <div>
+                    <h3 class="modal-section-title"><span>⛅</span> Previsão do Tempo no Feriadão (09/10 a 12/10)</h3>
+                    <div class="weather-detail-grid" id="m-weather-grid">
+                        <!-- Dynamic -->
+                    </div>
+                </div>
+
+                <!-- 4-Day Suggested Itinerary -->
+                <div>
+                    <h3 class="modal-section-title"><span>🗺️</span> Sugestão de Roteiro (4 Dias)</h3>
+                    <div class="itinerary-timeline" id="m-itinerary">
+                        <!-- Dynamic -->
+                    </div>
+                </div>
+
+                <!-- Gastronomy Tip -->
+                <div class="gastronomy-card">
+                    <h4><span>🍽️</span> O Que Comer (Destaques Gastronômicos)</h4>
+                    <p id="m-gastronomy">Pratos típicos e dicas gastronômicas locais.</p>
+                </div>
+
+                <!-- Top Attractions with links -->
+                <div>
+                    <h3 class="modal-section-title"><span>📍</span> Principais Atrações & Pontos Turísticos</h3>
+                    <div class="attractions-list" id="m-attractions">
+                        <!-- Dynamic -->
+                    </div>
+                </div>
+
+                <!-- External GPS Navigation Links -->
+                <div>
+                    <h3 class="modal-section-title"><span>🧭</span> Navegação GPS Direta (do seu CEP)</h3>
+                    <div class="modal-nav-links">
+                        <a href="#" target="_blank" class="btn-nav-map btn-gmaps" id="m-gmaps-btn">
+                            🗺️ Abrir Rota no Google Maps
+                        </a>
+                        <a href="#" target="_blank" class="btn-nav-map btn-waze" id="m-waze-btn">
+                            🚙 Traçar Rota no Waze
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Comparison Modal -->
+    <div class="modal-overlay" id="compare-modal" onclick="handleCompareBackdropClick(event)">
+        <div class="modal-container" style="max-width: 960px;">
+            <button class="modal-close-btn" onclick="closeCompareModal()" title="Fechar">&times;</button>
+            <div class="compare-modal-content">
+                <h2 style="font-size: 1.8rem; margin-bottom: 6px;">⚖️ Comparador de Destinos</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Compare tempo de viagem, consumo a 13 km/l, distância e clima lado a lado.
+                </p>
+
+                <div class="compare-table-wrapper" id="compare-table-container">
+                    <!-- Dynamic comparison table -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><strong>Expedições Feriadão de 12 de Outubro</strong> • Planejado para partida do Fonseca, Niterói - RJ (CEP 24120-210)</p>
+            <p>Dados de rota calculados via BR-101, BR-116 e BR-040 • Previsão climática estimada para o período de 09 a 12 de Outubro</p>
+            <p style="margin-top: 12px; font-size: 0.8rem; color: var(--text-dim);">Feito com foco em design moderno, usabilidade e alta performance.</p>
+        </div>
+    </footer>
+
+    <!-- Application Script -->
     <script>
-        const cities = [
-            { name: "Penedo (RJ)", dist: "~190 km", time: "2h 45m", fuel: "~15L", weather: "Agradável (16°C - 26°C)", details: "Pequena Finlândia brasileira, famosa pelas cachoeiras e fábricas de chocolate.", links: [{ text: "Pequena Finlândia", url: "https://www.tripadvisor.com.br/Attraction_Review-g303503-d2350438-Reviews-Pequena_Finlandia-Penedo_Itatiaia_State_of_Rio_de_Janeiro.html" }, { text: "Cachoeira de Deus", url: "https://www.tripadvisor.com.br/Attraction_Review-g303503-d2361730-Reviews-Cachoeira_de_Deus-Penedo_Itatiaia_State_of_Rio_de_Janeiro.html" }] },
-            { name: "Paraty (RJ)", dist: "~260 km", time: "4h 30m", fuel: "~20L", weather: "Possível chuva (22°C - 26°C)", details: "Centro histórico colonial impecável e passeios de escuna pelas ilhas.", links: [{ text: "Centro Histórico", url: "https://www.tripadvisor.com.br/Attraction_Review-g303504-d311985-Reviews-Centro_Historico-Paraty_State_of_Rio_de_Janeiro.html" }] },
-            { name: "Ouro Preto (MG)", dist: "~400 km", time: "6h 15m", fuel: "~31L", weather: "Ameno (15°C - 26°C)", details: "Patrimônio Mundial com ladeiras de paralelepípedo e igrejas barrocas.", links: [{ text: "Praça Tiradentes", url: "https://www.tripadvisor.com.br/Attraction_Review-g303387-d2426315-Reviews-Tiradentes_Square-Ouro_Preto_State_of_Minas_Gerais.html" }, { text: "Igreja S. Francisco", url: "https://www.tripadvisor.com.br/Attraction_Review-g303387-d311894-Reviews-Igreja_de_Sao_Francisco_de_Assis-Ouro_Preto_State_of_Minas_Gerais.html" }] },
-            { name: "Vitória/Vila Velha", dist: "~500 km", time: "7h 30m", fuel: "~38L", weather: "Sol (23°C - 29°C)", details: "Cidades irmãs unidas pela Terceira Ponte, famosas pelas praias e pelo convento.", links: [{ text: "Convento da Penha", url: "https://www.tripadvisor.com.br/Attraction_Review-g303323-d312151-Reviews-Convento_da_Penha-Vila_Velha_State_of_Espirito_Santo.html" }, { text: "Praia da Costa", url: "https://www.tripadvisor.com.br/Attraction_Review-g303323-d2382613-Reviews-Costa_Beach-Vila_Velha_State_of_Espirito_Santo.html" }] },
-            { name: "Serra da Canastra", dist: "~670 km", time: "9h 30m", fuel: "~52L", weather: "Pancadas (19°C - 29°C)", details: "Berço do Rio São Francisco e casa do famoso queijo Canastra.", links: [{ text: "Parque Nacional", url: "https://www.tripadvisor.com.br/Attraction_Review-g2343886-d2417720-Reviews-Serra_da_Canastra_National_Park-Sao_Roque_de_Minas_State_of_Minas_Gerais.html" }, { text: "Cachoeira Casca d'Anta", url: "https://www.tripadvisor.com.br/Attraction_Review-g2343886-d2417721-Reviews-Casca_d_Anta_Waterfall-Sao_Roque_de_Minas_State_of_Minas_Gerais.html" }] },
-            { name: "Beto Carrero (SC)", dist: "~1.000 km", time: "13h 30m", fuel: "~77L", weather: "Instável (18°C - 24°C)", details: "O maior parque temático da América Latina.", links: [{ text: "Site Oficial do Parque", url: "https://www.betocarrero.com.br/" }] }
-            // Adicionei algumas cidades como exemplo, você pode copiar e colar essa estrutura para adicionar as demais!
+        // DATA: 14 DESTINATIONS SORTED BY DRIVING TIME (ASCENDING) FROM FONSECA, NITERÓI (CEP 24120-210)
+        const destinations = [
+            {
+                id: 'penedo',
+                name: 'Penedo (Itatiaia - RJ)',
+                shortName: 'Penedo',
+                state: 'RJ',
+                rank: 1,
+                timeHours: 2.75,
+                timeStr: '2h 45m',
+                distKm: 195,
+                category: 'serra',
+                categoryLabel: 'Serra & Gastronomia',
+                image: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Ponte Rio-Niterói ➔ Linha Vermelha ➔ Rodovia Presidente Dutra (BR-116) até a Saída 311 (Itatiaia/Penedo).',
+                departureTip: 'No dia 09/10, saia bem cedo (até 6h30) para evitar o tráfego pesado da Ponte e Linha Vermelha sentido Dutra.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '🌤️', temp: '17° - 26°C', desc: 'Parcialmente nublado e agradável' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '16° - 27°C', desc: 'Sol firme e clima de serra' },
+                    { date: '11/10', day: 'Sábado', icon: '☀️', temp: '18° - 28°C', desc: 'Dia aberto, perfeito para cachoeiras' },
+                    { date: '12/10', day: 'Domingo', icon: '🌦️', temp: '18° - 26°C', desc: 'Sol e pancada leve no fim do dia' }
+                ],
+                highlights: ['Pequena Finlândia', 'Casa do Papai Noel', 'Cachoeira de Deus', 'Chocolates Artesanais', 'P. N. do Itatiaia'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Chegada Nórdica e Pequena Finlândia', text: 'Check-in na pousada, almoço com truta grelhada e passeio pelas lojinhas coloridas da Pequena Finlândia e Casa do Papai Noel.' },
+                    { day: 'Dia 2 (10/10)', title: 'Circuito das Cachoeiras e Alto Penedo', text: 'Manhã na Cachoeira de Deus e Três Bacias. À tarde, visita a fábricas de chocolate artesanal e fondue no jantar.' },
+                    { day: 'Dia 3 (11/10)', title: 'Parque Nacional do Itatiaia (Parte Baixa)', text: 'Passeio pela parte baixa do primeiro parque nacional do Brasil: Mirante do Último Adeus, Véu de Noiva e Lago Azul.' },
+                    { day: 'Dia 4 (12/10)', title: 'Museu Finlandês e Retorno', text: 'Visita ao Museu Dona Eva para conhecer a imigração finlandesa, almoço colonial e retorno tranquilo para Niterói.' }
+                ],
+                gastronomy: 'Trutas frescas grelhadas com amêndoas ou alcaparras, fondues suíços tradicionais, chocolates artesanais e sorvetes finlandeses.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Penedo,+Itatiaia+-+RJ',
+                wazeUrl: 'https://waze.com/ul?q=Penedo+Itatiaia+RJ'
+            },
+            {
+                id: 'paraty',
+                name: 'Paraty (RJ)',
+                shortName: 'Paraty',
+                state: 'RJ',
+                rank: 2,
+                timeHours: 4.25,
+                timeStr: '4h 15m',
+                distKm: 265,
+                category: 'historico',
+                categoryLabel: 'Histórico & Litoral',
+                image: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Ponte ➔ Av. Brasil ➔ BR-101 (Rio-Santos) passando por Mangaratiba e Angra dos Reis até Paraty.',
+                departureTip: 'A Rio-Santos costuma reter na saída de Itaguaí nos feriados. Saia às 5h30 ou após as 12h na quinta-feira.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '☀️', temp: '21° - 28°C', desc: 'Sol com brisa agradável no porto' },
+                    { date: '10/10', day: 'Sexta', icon: '🌤️', temp: '22° - 29°C', desc: 'Sol entre nuvens, mar calmo' },
+                    { date: '11/10', day: 'Sábado', icon: '☀️', temp: '23° - 30°C', desc: 'Ensolarado, perfeito para escuna' },
+                    { date: '12/10', day: 'Domingo', icon: '🌦️', temp: '22° - 27°C', desc: 'Sol e chuva passageira à tardinha' }
+                ],
+                highlights: ['Centro Histórico', 'Passeio de Escuna', 'Trindade', 'Alambiques Artesanais', 'Caminho do Ouro'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Caminhada Colonial e Gastronomia', text: 'Chegada, caminhada pelas ruas de pedra pé-de-moleque, visita à Igreja de Santa Rita e jantar em bistrô histórico.' },
+                    { day: 'Dia 2 (10/10)', title: 'Passeio de Barco pelas Ilhas da Baía', text: 'Embarque no Cais de Paraty para navegar até Ilha Comprida, Praia Vermelha e Praia da Lula com mergulho e peixe fresco.' },
+                    { day: 'Dia 3 (11/10)', title: 'Vila de Trindade e Cachoeiras', text: 'Bate-volta até Trindade: Praia do Meio, Trilha e Piscina Natural do Cachadaço. À tarde, visita ao Alambique Maria Izabel.' },
+                    { day: 'Dia 4 (12/10)', title: 'Artesanato Local e Retorno', text: 'Café da manhã com vista para o canal, compra de artesanato caiçara e retorno sem pressa pela Rio-Santos.' }
+                ],
+                gastronomy: 'Camarão casadinho recheado com farofa de palmito, peixe à belle meunière e a famosa cachaça Gabriela (cravo e canela).',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Paraty+-+RJ',
+                wazeUrl: 'https://waze.com/ul?q=Paraty+RJ'
+            },
+            {
+                id: 'ubatuba',
+                name: 'Ubatuba (SP)',
+                shortName: 'Ubatuba',
+                state: 'SP',
+                rank: 3,
+                timeHours: 5.25,
+                timeStr: '5h 15m',
+                distKm: 335,
+                category: 'praia',
+                categoryLabel: 'Praias & Natureza',
+                image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Ponte ➔ BR-101 (Rio-Santos) contornando Angra e Paraty até Ubatuba no litoral norte paulista.',
+                departureTip: 'Estrada sinuosa com visuais deslumbrantes da Mata Atlântica. Dirija com calma nas curvas da divisa RJ/SP.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '🌤️', temp: '20° - 27°C', desc: 'Sol e mar excelente' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '21° - 28°C', desc: 'Céu aberto na orla' },
+                    { date: '11/10', day: 'Sábado', icon: '☀️', temp: '22° - 29°C', desc: 'Sol radiante, ideal para ilhas' },
+                    { date: '12/10', day: 'Domingo', icon: '🌦️', temp: '21° - 26°C', desc: 'Chuva fina de serra no entardecer' }
+                ],
+                highlights: ['Ilha das Couves', 'Praia de Itamambuca', 'Projeto TAMAR', 'Aquário de Ubatuba', 'Trilha das Sete Praias'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Praias do Norte e Vila de Itamambuca', text: 'Chegada, parada na Praia de Félix e Itamambuca. Pôr do sol no píer do Itaguá e jantar de frutos do mar.' },
+                    { day: 'Dia 2 (10/10)', title: 'Ilha das Couves e Mergulho', text: 'Passeio de barco saindo de Picinguaba até a paradisíaca Ilha das Couves com águas verde-esmeralda.' },
+                    { day: 'Dia 3 (11/10)', title: 'Ilha Anchieta e Praia Grande', text: 'Visita ao Parque Estadual da Ilha Anchieta com ruínas históricas do antigo presídio e praias selvagens.' },
+                    { day: 'Dia 4 (12/10)', title: 'Projeto TAMAR e Retorno', text: 'Manhã cultural e educativa no Projeto TAMAR e Aquário de Ubatuba. Almoço no centro e viagem de volta.' }
+                ],
+                gastronomy: 'Azul-marinho (peixe cozido na panela de ferro com banana-da-terra e pirão), pastel de camarão caiçara.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Ubatuba+-+SP',
+                wazeUrl: 'https://waze.com/ul?q=Ubatuba+SP'
+            },
+            {
+                id: 'ouropreto',
+                name: 'Ouro Preto (MG)',
+                shortName: 'Ouro Preto',
+                state: 'MG',
+                rank: 4,
+                timeHours: 5.75,
+                timeStr: '5h 45m',
+                distKm: 395,
+                category: 'historico',
+                categoryLabel: 'Histórico & Barroco',
+                image: 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Linha Vermelha ➔ BR-040 (passando por Petrópolis, Juiz de Fora e Barbacena) ➔ BR-356 sentido Ouro Preto.',
+                departureTip: 'A BR-040 é duplicada e tem excelentes postos de apoio. A subida da Serra de Petrópolis rende belas fotos.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '☀️', temp: '16° - 27°C', desc: 'Sol e céu azul de montanha' },
+                    { date: '10/10', day: 'Sexta', icon: '🌤️', temp: '15° - 28°C', desc: 'Agradável com brisa fresca' },
+                    { date: '11/10', day: 'Sábado', icon: '☀️', temp: '16° - 28°C', desc: 'Dia ensolarado, ótimo para ladeiras' },
+                    { date: '12/10', day: 'Domingo', icon: '🌦️', temp: '15° - 25°C', desc: 'Pancada rápida no final da tarde' }
+                ],
+                highlights: ['Praça Tiradentes', 'Igreja São Francisco', 'Mina da Passagem', 'Lavras Novas', 'Feira de Pedra-Sabão'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Imersão no Século XVIII', text: 'Chegada pelas ladeiras históricas, visita à imponente Praça Tiradentes e Museu da Inconfidência. Jantar mineiro no Bené da Flauta.' },
+                    { day: 'Dia 2 (10/10)', title: 'Aleijadinho e o Ouro Colonial', text: 'Tour pelas igrejas de São Francisco de Assis e Nossa Senhora do Pilar com mais de 400kg de ouro. Visita às lojinhas de pedra-sabão.' },
+                    { day: 'Dia 3 (11/10)', title: 'Mina da Passagem e Lavras Novas', text: 'Descida no carrinho sobre trilhos até as galerias da Mina da Passagem em Mariana. À tarde, pôr do sol no charmoso distrito de Lavras Novas.' },
+                    { day: 'Dia 4 (12/10)', title: 'Mirante Morro São Sebastião e Retorno', text: 'Café com pão de queijo da roça, vista panorâmica do Morro São Sebastião e retorno para Niterói pela BR-040.' }
+                ],
+                gastronomy: 'Feijão tropeiro legítimo, frango com quiabo e polenta na panela de ferro, doce de leite em barra e queijo minas curado.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Ouro+Preto+-+MG',
+                wazeUrl: 'https://waze.com/ul?q=Ouro+Preto+MG'
+            },
+            {
+                id: 'ilhabela',
+                name: 'Ilhabela (SP)',
+                shortName: 'Ilhabela',
+                state: 'SP',
+                rank: 5,
+                timeHours: 6.25,
+                timeStr: '6h 15m',
+                distKm: 415,
+                category: 'praia',
+                categoryLabel: 'Ilha & Ecoturismo',
+                image: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Rio-Santos ou Dutra até São Sebastião ➔ Balsa de travessia para Ilhabela (20 minutos de travessia).',
+                departureTip: 'Essencial agendar "Hora Marcada" da balsa no site da Dersa para evitar filas de até 3 horas no feriadão.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '☀️', temp: '21° - 28°C', desc: 'Sol firme e mar calmo no canal' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '22° - 29°C', desc: 'Céu aberto, dia ideal para barco' },
+                    { date: '11/10', day: 'Sábado', icon: '🌤️', temp: '23° - 30°C', desc: 'Sol entre poucas nuvens' },
+                    { date: '12/10', day: 'Domingo', icon: '🌦️', temp: '22° - 27°C', desc: 'Chuva leve no fim do dia' }
+                ],
+                highlights: ['Praia de Castelhanos (4x4)', 'Vila de Ilhabela', 'Praia do Bonete', 'Cachoeira da Feiticeira', 'Mergulho na Ilha das Cabras'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Travessia de Balsa e Vila Histórica', text: 'Chegada à ilha, almoço no centrinho histórico (A Vila) com vista para os iates e banho de mar na Praia do Curral.' },
+                    { day: 'Dia 2 (10/10)', title: 'Expedição 4x4 em Castelhanos', text: 'Aventura cruzando a ilha pelo Parque Estadual de Ilhabela em jipe 4x4 até a selvagem Praia de Castelhanos com formato de coração.' },
+                    { day: 'Dia 3 (11/10)', title: 'Cachoeiras e Santuário Marinho', text: 'Mergulho com snorkel na Ilha das Cabras (peixes e corais) e trilha para a refrescante Cachoeira da Feiticeira.' },
+                    { day: 'Dia 4 (12/10)', title: 'Manhã Náutica e Retorno', text: 'Stand up paddle nas águas calmas da Praia da Armação, almoço caiçara e balsa agendada de volta ao continente.' }
+                ],
+                gastronomy: 'Robalo grelhado com molho de maracujá, casquinha de siri, caipirinhas com frutas da época e sobremesas artesanais.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Ilhabela+-+SP',
+                wazeUrl: 'https://waze.com/ul?q=Ilhabela+SP'
+            },
+            {
+                id: 'brumadinho',
+                name: 'Brumadinho (MG)',
+                shortName: 'Brumadinho',
+                state: 'MG',
+                rank: 6,
+                timeHours: 6.75,
+                timeStr: '6h 45m',
+                distKm: 460,
+                category: 'arte',
+                categoryLabel: 'Arte & Jardim Botânico',
+                image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Linha Vermelha ➔ BR-040 sentido Belo Horizonte ➔ Saída para BR-381 / Brumadinho.',
+                departureTip: 'Compre ingressos do Instituto Inhotim com antecedência online para evitar filas no feriadão de outubro.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '☀️', temp: '17° - 29°C', desc: 'Sol e clima agradável' },
+                    { date: '10/10', day: 'Sexta', icon: '🌤️', temp: '18° - 30°C', desc: 'Primavera amena nos jardins' },
+                    { date: '11/10', day: 'Sábado', icon: '🌤️', temp: '19° - 30°C', desc: 'Sol entre nuvens, ótimo para passeios' },
+                    { date: '12/10', day: 'Domingo', icon: '🌦️', temp: '18° - 28°C', desc: 'Pancada rápida no entardecer' }
+                ],
+                highlights: ['Instituto Inhotim', 'Serra da Moeda', 'Rota da Cachaça', 'Piedade do Paraopeba', 'Jardim Botânico'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Serra da Moeda e Gastronomia Mineira', text: 'Subida ao Mirante da Serra da Moeda para almoço no restaurante panorâmico e voos de parapente. Check-in na pousada de charme.' },
+                    { day: 'Dia 2 (10/10)', title: 'Inhotim - Circuito Laranja e Amarelo', text: 'Dia inteiro no Inhotim: Pavilhão Adriana Varejão, True Rouge de Tunga, Galeria Cosmococa e lagos de palmeiras imperiais.' },
+                    { day: 'Dia 3 (11/10)', title: 'Inhotim - Circuito Rosa e Trilha da Mata', text: 'Segundo dia de Inhotim: Galeria Cildo Meireles, Som da Terra de Doug Aitken e coleção botânica de orquídeas e bromélias.' },
+                    { day: 'Dia 4 (12/10)', title: 'Vilarejo Histórico de Piedade e Volta', text: 'Café da manhã da roça, visita à bicentenária Igreja de Nossa Senhora do Rosário e retorno tranquilo pela BR-040.' }
+                ],
+                gastronomy: 'Costelinha de porco com ora-pro-nóbis, tutu de feijão na cumbuca de barro, queijos canastra artesanais e goiabada cascão.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Brumadinho+-+MG',
+                wazeUrl: 'https://waze.com/ul?q=Brumadinho+MG'
+            },
+            {
+                id: 'domingosmartins',
+                name: 'Domingos Martins (ES)',
+                shortName: 'Domingos Martins',
+                state: 'ES',
+                rank: 7,
+                timeHours: 7.25,
+                timeStr: '7h 15m',
+                distKm: 485,
+                category: 'serra',
+                categoryLabel: 'Serra & Cultura Germânica',
+                image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca (Niterói) ➔ Saída direta para BR-101 Norte (sem pegar a Ponte!) ➔ Rio Novo do Sul ➔ BR-262 (Pedra Azul).',
+                departureTip: 'Super vantagem: saindo do Fonseca pela Alameda São Boaventura, você já cai direto na BR-101 Norte sem pegar a Ponte Rio-Niterói!',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '🌤️', temp: '15° - 25°C', desc: 'Clima ameno com bruma de montanha' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '14° - 26°C', desc: 'Sol radiante na Rota do Lagarto' },
+                    { date: '11/10', day: 'Sábado', icon: '☀️', temp: '15° - 27°C', desc: 'Dia perfeito para trilhas e cafés' },
+                    { date: '12/10', day: 'Domingo', icon: '🌤️', temp: '14° - 24°C', desc: 'Frio gostoso e tempo agradável' }
+                ],
+                highlights: ['Parque Estadual de Pedra Azul', 'Rota do Lagarto', 'Praça Arthur Gerhardt', 'Lavandário', 'Cervejarias Artesanais'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Chegada na Suíça Capixaba', text: 'Passeio pela aconchegante Praça Arthur Gerhardt no centro, arquitetura enxaimel e almoço com marreco recheado e cerveja artesanal.' },
+                    { day: 'Dia 2 (10/10)', title: 'Pedra Azul e Piscinas Naturais', text: 'Trilha guiada no Parque da Pedra Azul até as piscinas naturais escavadas na rocha. Almoço requintado em restaurante com vista para o Lagarto.' },
+                    { day: 'Dia 3 (11/10)', title: 'Rota do Lagarto e Cafés Especiais', text: 'Passeio de carro pela Rota do Lagarto: degustação de cafés especiais arábica premiados, visita ao Lavandário e fábrica de queijos.' },
+                    { day: 'Dia 4 (12/10)', title: 'Compras de Produtos da Roça e Retorno', text: 'Manhã para adquirir geleias, mel e embutidos artesanais, e descida direta pela BR-101 de volta ao Fonseca.' }
+                ],
+                gastronomy: 'Eisbein (joelho de porco) com chucrute, truta grelhada com risoto de queijo da serra, strudel de maçã e cafés especiais capixabas.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Domingos+Martins+-+ES',
+                wazeUrl: 'https://waze.com/ul?q=Domingos+Martins+ES'
+            },
+            {
+                id: 'vitoria',
+                name: 'Vitória / Vila Velha (ES)',
+                shortName: 'Vitória/Vila Velha',
+                state: 'ES',
+                rank: 8,
+                timeHours: 7.5,
+                timeStr: '7h 30m',
+                distKm: 510,
+                category: 'litoral',
+                categoryLabel: 'Litoral & Gastronomia',
+                image: 'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca (Niterói) ➔ BR-101 Norte direto até a Grande Vitória. Trajeto contínuo e sem cruzar a Ponte.',
+                departureTip: 'Paradas ótimas em Campos dos Goytacazes e Iconha para almoçar e abastecer com calma.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '☀️', temp: '22° - 29°C', desc: 'Sol forte e vento fresco da orla' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '23° - 30°C', desc: 'Céu aberto na Curva da Jurema' },
+                    { date: '11/10', day: 'Sábado', icon: '🌤️', temp: '23° - 30°C', desc: 'Dia de praia na Praia da Costa' },
+                    { date: '12/10', day: 'Domingo', icon: '🌤️', temp: '22° - 28°C', desc: 'Sol entre nuvens suaves' }
+                ],
+                highlights: ['Convento da Penha', 'Praia da Costa', 'Moqueca Capixaba', 'Fábrica da Garoto', 'Terceira Ponte'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Convento da Penha e Vista 360°', text: 'Subida ao histórico Convento da Penha no alto do penhasco rochoso em Vila Velha. Pôr do sol na Praia da Costa e calçadão.' },
+                    { day: 'Dia 2 (10/10)', title: 'Autêntica Moqueca Capixaba', text: 'Manhã na Ilha do Frade e Curva da Jurema. Almoço imperdível com Moqueca Capixaba feita na panela de barro de Goiabeiras.' },
+                    { day: 'Dia 3 (11/10)', title: 'Fábrica de Chocolates Garoto e Museu', text: 'Visita à lendária fábrica de chocolates Garoto em Vila Velha. À tarde, travessia da Terceira Ponte com ciclovia suspensa espetacular.' },
+                    { day: 'Dia 4 (12/10)', title: 'Centro Histórico de Vitória e Retorno', text: 'Visita ao Palácio Anchieta e Catedral Metropolitana de Vitória, almoço com torta capixaba e viagem de retorno.' }
+                ],
+                gastronomy: 'Legítima Moqueca Capixaba de robalo ou badejo com coentro, urucum e camarão (sem azeite de dendê), Torta Capixaba tradicional.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Vit%C3%B3ria+-+ES',
+                wazeUrl: 'https://waze.com/ul?q=Vitoria+ES'
+            },
+            {
+                id: 'diamantina',
+                name: 'Diamantina (MG)',
+                shortName: 'Diamantina',
+                state: 'MG',
+                rank: 9,
+                timeHours: 9.75,
+                timeStr: '9h 45m',
+                distKm: 730,
+                category: 'historico',
+                categoryLabel: 'Patrimônio Mundial & Música',
+                image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Linha Vermelha ➔ BR-040 até BH ➔ Curvelo (BR-135) ➔ Diamantina (BR-259 / BR-367).',
+                departureTip: 'Saia às 4h da manhã para pegar a BR-040 livre e chegar a Diamantina no meio da tarde com luz solar.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '☀️', temp: '16° - 28°C', desc: 'Sol firme e clima seco do cerrado' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '15° - 29°C', desc: 'Céu azul e noites estreladas' },
+                    { date: '11/10', day: 'Sábado', icon: '🌤️', temp: '16° - 29°C', desc: 'Tempo perfeito para a Vesperata' },
+                    { date: '12/10', day: 'Domingo', icon: '🌦️', temp: '16° - 26°C', desc: 'Sol e pancada passageira' }
+                ],
+                highlights: ['Vesperata Musical', 'Passadiço da Glória', 'Parque de Biribiri', 'Casa de Chica da Silva', 'Casa de JK'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Chegada e Passeio Noturno no Casario', text: 'Check-in em pousada colonial, caminhada na Rua da Quitanda e jantar acompanhado de cachaça artesanal e queijo do Serro.' },
+                    { day: 'Dia 2 (10/10)', title: 'História Imperial e Chica da Silva', text: 'Tour pela Casa de JK, Casa de Chica da Silva e o icônico Passadiço da Glória que une os casarões coloniais sobre a rua.' },
+                    { day: 'Dia 3 (11/10)', title: 'Vila de Biribiri e Cachoeiras', text: 'Bate-volta no Parque Estadual de Biribiri: banho refrescante na Cachoeira da Sentinela e almoço na antiga vila fabril preservada.' },
+                    { day: 'Dia 4 (12/10)', title: 'Artesanato de Serestas e Retorno', text: 'Manhã para adquirir tapetes de arraiolos e doces cristalizados no mercado municipal, iniciando a viagem de volta.' }
+                ],
+                gastronomy: 'Galinha ao molho pardo, queijo do Serro (patrimônio imaterial), empadas diamantinas e doce de abóbora com coco.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Diamantina+-+MG',
+                wazeUrl: 'https://waze.com/ul?q=Diamantina+MG'
+            },
+            {
+                id: 'canastra',
+                name: 'Serra da Canastra (São Roque de Minas - MG)',
+                shortName: 'Serra da Canastra',
+                state: 'MG',
+                rank: 10,
+                timeHours: 10.0,
+                timeStr: '10h 00m',
+                distKm: 675,
+                category: 'aventura',
+                categoryLabel: 'Ecoturismo & Queijo Canastra',
+                image: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Dutra até Barra Mansa ➔ Caxambu ➔ Lavras ➔ Formiga / Piumhi ➔ São Roque de Minas.',
+                departureTip: 'Recomendado veículo com boa altura do solo para acessar o topo do Parque Nacional e as fazendas produtoras de queijo.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '☀️', temp: '18° - 30°C', desc: 'Sol e ar puro de chapada' },
+                    { date: '10/10', day: 'Sexta', icon: '🌤️', temp: '17° - 29°C', desc: 'Agradável para trilhas e cachoeiras' },
+                    { date: '11/10', day: 'Sábado', icon: '☀️', temp: '18° - 30°C', desc: 'Céu aberto na Casca d’Anta' },
+                    { date: '12/10', day: 'Domingo', icon: '🌦️', temp: '17° - 27°C', desc: 'Pancada rápida vespertina' }
+                ],
+                highlights: ['Cachoeira Casca d’Anta (186m)', 'Nascente do Rio São Francisco', 'Fazendas do Queijo Canastra', 'Cachoeira do Chinela', 'Safári Fotográfico do Cerrado'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Chegada em São Roque de Minas', text: 'Recepção com cafezinho coado e queijo canastra meia-cura na pousada rural. Jantar tropeiro no vilarejo.' },
+                    { day: 'Dia 2 (10/10)', title: 'A Gigante Casca d’Anta', text: 'Trilha até a base da monumental queda de 186 metros do Rio São Francisco. Poço com águas cristalinas e energia revigorante.' },
+                    { day: 'Dia 3 (11/10)', title: 'Nascente do Velho Chico e Rota do Queijo', text: 'Subida à parte alta do parque: marco zero da nascente do Rio São Francisco e visita a fazendas produtoras de queijo premiadas na França.' },
+                    { day: 'Dia 4 (12/10)', title: 'Despedida com Queijos na Mala', text: 'Degustação final com queijos curados artesanais para trazer de recordação e início da viagem de retorno.' }
+                ],
+                gastronomy: 'Queijo Canastra artesanal cru e curado na tábua, feijão tropeiro com linguiça caipira, leitão à pururuca e pão de queijo quentinho.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/S%C3%A3o+Roque+de+Minas+-+MG',
+                wazeUrl: 'https://waze.com/ul?q=Sao+Roque+de+Minas+MG'
+            },
+            {
+                id: 'costabaleias',
+                name: 'Costa das Baleias / Sul da Bahia (Prado e Cumuruxatiba - BA)',
+                shortName: 'Costa das Baleias (BA)',
+                state: 'BA',
+                rank: 11,
+                timeHours: 13.0,
+                timeStr: '13h 00m',
+                distKm: 890,
+                category: 'praia',
+                categoryLabel: 'Baleias Jubarte & Falésias',
+                image: 'https://images.unsplash.com/photo-1509233725247-49e657c54213?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca (Niterói) ➔ Saída direta BR-101 Norte atravessando o Espírito Santo ➔ Teixeira de Freitas ➔ Prado / Cumuruxatiba.',
+                departureTip: 'Outubro é o auge da reprodução das baleias Jubarte! Reserve o passeio náutico com antecedência.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '☀️', temp: '23° - 31°C', desc: 'Sol radiante e mar morno' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '24° - 31°C', desc: 'Céu azul e brisa caribenha' },
+                    { date: '11/10', day: 'Sábado', icon: '☀️', temp: '23° - 32°C', desc: 'Excelente para avistamento de baleias' },
+                    { date: '12/10', day: 'Domingo', icon: '🌤️', temp: '23° - 30°C', desc: 'Sol e mar piscininha na maré baixa' }
+                ],
+                highlights: ['Avistamento de Baleias Jubarte', 'Falésias da Praia de Tororão', 'Cumuruxatiba', 'Ponta do Corumbau', 'Abrolhos'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Chegada na Bahia e Falésias Vermelhas', text: 'Boas-vindas com água de coco gelada nas praias de falésias de Prado (Praia da Paixão e Tororão com bica d’água doce na areia).' },
+                    { day: 'Dia 2 (10/10)', title: 'Expedição das Baleias Jubarte', text: 'Embarque em lancha ou escuna para presenciar os saltos inesquecíveis das baleias jubarte com seus filhotes na costa baiana.' },
+                    { day: 'Dia 3 (11/10)', title: 'Paraíso de Cumuruxatiba e Corumbau', text: 'Passeio até a rústica Cumuruxatiba e a Ponta do Corumbau com extenso banco de areia branca que adentra o mar por quilômetros.' },
+                    { day: 'Dia 4 (12/10)', title: 'Manhã Caiçara e Início da Volta', text: 'Mergulho matinal nas piscinas naturais de corais, almoço com badejo na brasa e retorno planejado.' }
+                ],
+                gastronomy: 'Moqueca baiana mista de peixe e camarão, bobó de camarão fresco, acarajé com vatapá e cocadas de forno da Bahia.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Prado+-+BA',
+                wazeUrl: 'https://waze.com/ul?q=Prado+BA'
+            },
+            {
+                id: 'betocarrero',
+                name: 'Beto Carrero World (Penha - SC)',
+                shortName: 'Beto Carrero World',
+                state: 'SC',
+                rank: 12,
+                timeHours: 13.5,
+                timeStr: '13h 30m',
+                distKm: 995,
+                category: 'familia',
+                categoryLabel: 'Parques & Família',
+                image: 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Ponte ➔ Dutra ➔ Rodoanel Mário Covas (SP) ➔ Régis Bittencourt (BR-116) até Curitiba ➔ BR-101 até Penha (SC).',
+                departureTip: 'No dia 12/10 (Dia das Crianças), adquira o Fast Pass antecipado para furar as filas das montanhas-russas!',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '🌤️', temp: '16° - 24°C', desc: 'Agradável com sol entre nuvens' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '17° - 26°C', desc: 'Ensolarado, perfeito para o parque' },
+                    { date: '11/10', day: 'Sábado', icon: '🌤️', temp: '18° - 27°C', desc: 'Sol e clima excelente para shows' },
+                    { date: '12/10', day: 'Domingo', icon: '🌤️', temp: '17° - 25°C', desc: 'Dia das Crianças com clima ameno' }
+                ],
+                highlights: ['Castelo das Nações', 'FireWhip (Montanha-Russa Invertida)', 'Hot Wheels Epic Show', 'Praias de Penha', 'Madagascar'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Chegada no Litoral Catarinense', text: 'Chegada em Penha, hospedagem próxima ao parque e relaxamento na Praia da Bacia da Vovó com águas calmas e restaurantes de frutos do mar.' },
+                    { day: 'Dia 2 (10/10)', title: 'Adrenalina e Shows Temáticos', text: 'Primeiro dia de parque: show eletrizante do Hot Wheels, montanha-russa invertida FireWhip, Star Mountain e show Madagascar Circus.' },
+                    { day: 'Dia 3 (11/10)', title: 'Dia das Atrações Aquáticas e Família', text: 'Rebuliço, Raskapuska, Big Tower com queda livre de 100m, área temática Nerf Mania e fotos com personagens de filmes infantis.' },
+                    { day: 'Dia 4 (12/10)', title: 'Praias de Penha e Retorno', text: 'Manhã contemplando as falésias da Ponta da Vigia e Praia Vermelha, almoço com mariscos frescos e retorno.' }
+                ],
+                gastronomy: 'Mariscada e ostras frescas de Santa Catarina, marreco recheado germânico e sequências completas de camarão.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Beto+Carrero+World,+Penha+-+SC',
+                wazeUrl: 'https://waze.com/ul?q=Beto+Carrero+World'
+            },
+            {
+                id: 'trancoso',
+                name: 'Trancoso (Porto Seguro - BA)',
+                shortName: 'Trancoso',
+                state: 'BA',
+                rank: 13,
+                timeHours: 15.0,
+                timeStr: '15h 00m',
+                distKm: 1030,
+                category: 'praia',
+                categoryLabel: 'Charme Baiano & Luxo Rústico',
+                image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca (Niterói) ➔ BR-101 Norte direto até Eunápolis ➔ BA-001 sentido Trancoso.',
+                departureTip: 'Excelente opção para revezar a direção com copiloto ou fazer pernoite relaxante no litoral norte do Espírito Santo.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '☀️', temp: '24° - 31°C', desc: 'Sol radiante e mar transparente' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '24° - 32°C', desc: 'Céu azul e brisa deliciosa' },
+                    { date: '11/10', day: 'Sábado', icon: '☀️', temp: '25° - 32°C', desc: 'Dia ensolarado, noite mágica' },
+                    { date: '12/10', day: 'Domingo', icon: '🌤️', temp: '24° - 30°C', desc: 'Sol entre poucas nuvens' }
+                ],
+                highlights: ['O Quadrado Histórico', 'Praia dos Coqueiros', 'Praia do Espelho', 'Praia dos Nativos', 'Falésias de Taípe'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'A Magia do Quadrado ao Entardecer', text: 'Chegada, vista do mirante da igrejinha histórica de São João Batista para o mar e jantar à luz de velas nas mesas sob as árvores do Quadrado.' },
+                    { day: 'Dia 2 (10/10)', title: 'Beach Clubs e Rio Trancoso', text: 'Dia de descanso nos charmosos quiosques da Praia dos Coqueiros e Praia dos Nativos, onde o rio de águas mornas encontra o oceano.' },
+                    { day: 'Dia 3 (11/10)', title: 'Piscinas Naturais da Praia do Espelho', text: 'Bate-volta na icônica Praia do Espelho na maré baixa: reflexo perfeito das falésias nas piscinas marinhas de coral.' },
+                    { day: 'Dia 4 (12/10)', title: 'Falésias de Taípe e Despedida', text: 'Caminhada pelas monumentais falésias multicoloridas de Taípe, almoço à beira-mar e início da rota de volta.' }
+                ],
+                gastronomy: 'Peixe assado na folha de bananeira, risoto de polvo com leite de coco fresco, tapiocas recheadas do Quadrado e caipirinhas de cacau.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Trancoso,+Porto+Seguro+-+BA',
+                wazeUrl: 'https://waze.com/ul?q=Trancoso+BA'
+            },
+            {
+                id: 'canela',
+                name: 'Canela (Serra Gaúcha - RS)',
+                shortName: 'Canela',
+                state: 'RS',
+                rank: 14,
+                timeHours: 20.5,
+                timeStr: '20h 30m',
+                distKm: 1530,
+                category: 'serra',
+                categoryLabel: 'Serra Gaúcha & Romântico',
+                image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
+                routeSummary: 'Fonseca ➔ Ponte ➔ Dutra ➔ Régis Bittencourt ➔ Curitiba ➔ BR-101 até Osório ➔ Rota Romântica até Canela.',
+                departureTip: 'A maior road trip da lista! Ideal para quem viaja de motorhome ou gosta de grandes viagens cruzando 5 estados brasileiros.',
+                weatherForecast: [
+                    { date: '09/10', day: 'Quinta', icon: '🌤️', temp: '12° - 21°C', desc: 'Clima europeu com ar geladinho' },
+                    { date: '10/10', day: 'Sexta', icon: '☀️', temp: '11° - 23°C', desc: 'Sol e céu azul entre os pinheiros' },
+                    { date: '11/10', day: 'Sábado', icon: '🌤️', temp: '13° - 24°C', desc: 'Tempo agradável na montanha' },
+                    { date: '12/10', day: 'Domingo', icon: '🌦️', temp: '12° - 19°C', desc: 'Temperatura amena com garoa leve' }
+                ],
+                highlights: ['Catedral de Pedra', 'Cascata do Caracol', 'Skyglass Canela', 'Alpen Park', 'Chocolates Artesanais & Gramado'],
+                itinerary: [
+                    { day: 'Dia 1 (09/10)', title: 'Chegada na Serra e Catedral Iluminada', text: 'Check-in em pousada com lareira, visita à imponente Catedral de Pedra no centro de Canela com show de luzes e sons. Jantar com fondue tradicional.' },
+                    { day: 'Dia 2 (10/10)', title: 'Cascata do Caracol e Skyglass', text: 'Passeio de bondinhos aéreos com vista frontal para os 131m da Cascata do Caracol e adrenalina na plataforma de vidro transparente do Skyglass.' },
+                    { day: 'Dia 3 (11/10)', title: 'Alpen Park e Rota dos Chocolates', text: 'Trenó alpino veloz na encosta verde, passeio pelas fábricas de chocolate artesanal da serra e visita aos pontos turísticos de Gramado (Lago Negro e Rua Coberta).' },
+                    { day: 'Dia 4 (12/10)', title: 'Café Colonial Típico e Retorno', text: 'Farto café colonial com pães caseiros, queijos, apfelstrudel e geleias, desfrutando a beleza da Rota Romântica.' }
+                ],
+                gastronomy: 'Sequência de fondue (queijo, carnes no rechaud e chocolate com frutas), galeto al primo canto com polenta frita e vinhos da serra.',
+                mapsUrl: 'https://www.google.com/maps/dir/CEP+24120-210,+Fonseca,+Niter%C3%B3i+-+RJ/Canela+-+RS',
+                wazeUrl: 'https://waze.com/ul?q=Canela+RS'
+            }
         ];
 
-        const container = document.getElementById('card-container');
+        // APP STATE
+        let gasPrice = 6.10;
+        let kmPerLiter = 13.0;
+        let tripMode = 'ida'; // 'ida' or 'ida-volta'
+        let currentCategory = 'all';
+        let currentTimeFilter = 'all';
+        let searchQuery = '';
+        let currentSort = 'time-asc';
+        let favorites = JSON.parse(localStorage.getItem('fav_trips') || '[]');
+        let compareList = JSON.parse(localStorage.getItem('compare_trips') || '[]');
 
-        cities.forEach((city, index) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <h2>${city.name}</h2>
-                <p>🕒 ${city.time} | 🛣️ ${city.dist}</p>
-                <p>⛽ ${city.fuel}</p>
-            `;
-            card.onclick = () => openModal(index);
-            container.appendChild(card);
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCompareBadge();
+            renderDestinations();
+            updateCalculator();
         });
 
-        function openModal(index) {
-            const city = cities[index];
-            document.getElementById('modal-title').innerText = city.name;
-            document.getElementById('modal-details').innerText = city.details;
-            document.getElementById('modal-weather').innerText = city.weather;
-            
-            const linksContainer = document.getElementById('modal-links');
-            linksContainer.innerHTML = '';
-            city.links.forEach(link => {
-                const a = document.createElement('a');
-                a.href = link.url;
-                a.target = '_blank';
-                a.innerText = '📍 ' + link.text;
-                linksContainer.appendChild(a);
-            });
+        // CALCULATOR CALCULATIONS
+        function getFuelMetrics(distKm) {
+            const multiplier = (tripMode === 'ida-volta') ? 2 : 1;
+            const totalKm = distKm * multiplier;
+            const liters = totalKm / kmPerLiter;
+            const cost = liters * gasPrice;
+            return {
+                totalKm,
+                liters: liters.toFixed(1),
+                costFormatted: cost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                costRaw: cost
+            };
+        }
 
-            document.getElementById('cityModal').style.display = 'flex';
+        function setTripMode(mode) {
+            tripMode = mode;
+            document.getElementById('btn-ida').classList.toggle('active', mode === 'ida');
+            document.getElementById('btn-ida-volta').classList.toggle('active', mode === 'ida-volta');
+            updateCalculator();
+            renderDestinations();
+        }
+
+        function updateCalculator() {
+            const priceSlider = document.getElementById('gas-price-slider');
+            const kmSlider = document.getElementById('km-per-l-slider');
+            
+            gasPrice = parseFloat(priceSlider.value);
+            kmPerLiter = parseFloat(kmSlider.value);
+
+            document.getElementById('gas-price-val').innerText = `R$ ${gasPrice.toFixed(2).replace('.', ',')} / L`;
+            document.getElementById('km-per-l-val').innerText = `${kmPerLiter.toFixed(1).replace('.', ',')} km / L`;
+
+            // Calculate min & max cost
+            const penedoFuel = getFuelMetrics(195);
+            const canelaFuel = getFuelMetrics(1530);
+
+            document.getElementById('min-cost-display').innerText = penedoFuel.costFormatted;
+            document.getElementById('max-cost-display').innerText = canelaFuel.costFormatted;
+
+            renderDestinations();
+        }
+
+        // FILTER & SORT
+        function setCategoryFilter(cat, btn) {
+            currentCategory = cat;
+            currentTimeFilter = 'all';
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderDestinations();
+        }
+
+        function setTimeFilter(tFilter, btn) {
+            currentTimeFilter = tFilter;
+            currentCategory = 'all';
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderDestinations();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+            renderDestinations();
+        }
+
+        function handleSortChange() {
+            currentSort = document.getElementById('sort-select').value;
+            renderDestinations();
+        }
+
+        function getFilteredAndSortedList() {
+            return destinations.filter(dest => {
+                // Category match
+                if (currentCategory !== 'all' && dest.category !== currentCategory) {
+                    return false;
+                }
+                // Time category match
+                if (currentTimeFilter === 'short' && dest.timeHours >= 6) return false;
+                if (currentTimeFilter === 'medium' && (dest.timeHours < 6 || dest.timeHours > 10)) return false;
+                if (currentTimeFilter === 'long' && dest.timeHours <= 10) return false;
+
+                // Search query match
+                if (searchQuery) {
+                    const matchName = dest.name.toLowerCase().includes(searchQuery);
+                    const matchState = dest.state.toLowerCase().includes(searchQuery);
+                    const matchHigh = dest.highlights.some(h => h.toLowerCase().includes(searchQuery));
+                    if (!matchName && !matchState && !matchHigh) return false;
+                }
+
+                return true;
+            }).sort((a, b) => {
+                if (currentSort === 'time-asc') return a.timeHours - b.timeHours;
+                if (currentSort === 'dist-asc') return a.distKm - b.distKm;
+                if (currentSort === 'cost-asc') {
+                    const costA = (a.distKm / kmPerLiter) * gasPrice;
+                    const costB = (b.distKm / kmPerLiter) * gasPrice;
+                    return costA - costB;
+                }
+                if (currentSort === 'name-asc') return a.name.localeCompare(b.name);
+                return 0;
+            });
+        }
+
+        // RENDER DESTINATION CARDS
+        function renderDestinations() {
+            const container = document.getElementById('destinations-grid');
+            const list = getFilteredAndSortedList();
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span>🔍</span>
+                        <h3>Nenhum destino encontrado</h3>
+                        <p>Tente ajustar os filtros ou o termo de busca para visualizar os roteiros.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = list.map(city => {
+                const fuel = getFuelMetrics(city.distKm);
+                const isFav = favorites.includes(city.id);
+                const isCompared = compareList.includes(city.id);
+
+                return `
+                    <article class="dest-card" id="card-${city.id}">
+                        <div class="card-media">
+                            <img src="${city.image}" alt="${city.name}" class="card-img" loading="lazy">
+                            <div class="card-overlay"></div>
+                            <span class="card-rank-badge">#${city.rank} • Mais Próximo</span>
+                            <span class="card-category-badge">${city.categoryLabel}</span>
+                            <div class="card-header-info">
+                                <h2>${city.name}</h2>
+                                <div class="card-location">📍 ${city.state} • Partida Niterói (Fonseca)</div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <!-- Route Key Metrics -->
+                            <div class="route-metrics">
+                                <div class="metric-item">
+                                    <div class="metric-icon">⏱️</div>
+                                    <div class="metric-data">
+                                        <div class="metric-label">Tempo Est.</div>
+                                        <div class="metric-val highlight-time">${city.timeStr}</div>
+                                    </div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-icon">🛣️</div>
+                                    <div class="metric-data">
+                                        <div class="metric-label">${tripMode === 'ida-volta' ? 'Dist. Ida/Volta' : 'Distância'}</div>
+                                        <div class="metric-val">${fuel.totalKm} km</div>
+                                    </div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-icon">⛽</div>
+                                    <div class="metric-data">
+                                        <div class="metric-label">Consumo (13 km/l)</div>
+                                        <div class="metric-val">${fuel.liters} L</div>
+                                    </div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-icon">💰</div>
+                                    <div class="metric-data">
+                                        <div class="metric-label">Custo Combustível</div>
+                                        <div class="metric-val highlight-cost">${fuel.costFormatted}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 4-Day Mini Weather Strip (09/10 a 12/10) -->
+                            <div class="weather-holiday-strip">
+                                <div class="weather-strip-header">
+                                    <span>⛅ Previsão Feriado</span>
+                                    <span>09/10 a 12/10</span>
+                                </div>
+                                <div class="weather-days-row">
+                                    ${city.weatherForecast.map(w => `
+                                        <div class="mini-day-col" title="${w.desc}">
+                                            <span class="mini-date">${w.date.split('/')[0]} ${w.day.slice(0,3)}</span>
+                                            <span class="mini-icon">${w.icon}</span>
+                                            <span class="mini-temp">${w.temp.split(' - ')[1] || w.temp}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Highlights tags -->
+                            <div class="tags-cluster">
+                                ${city.highlights.slice(0, 4).map(tag => `<span class="highlight-tag">📍 ${tag}</span>`).join('')}
+                            </div>
+
+                            <!-- Card Actions -->
+                            <div class="card-actions">
+                                <button class="btn-view-details" onclick="openModal('${city.id}')">
+                                    <span>Ver Roteiro Completo</span>
+                                    <span>➔</span>
+                                </button>
+                                
+                                <button class="btn-icon-action ${isFav ? 'fav-active' : ''}" onclick="toggleFavorite('${city.id}')" title="Favoritar">
+                                    ${isFav ? '❤️' : '🤍'}
+                                </button>
+
+                                <button class="btn-icon-action" onclick="toggleCompare('${city.id}')" title="${isCompared ? 'Remover da Comparação' : 'Adicionar à Comparação'}" style="${isCompared ? 'border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(0,240,255,0.15);' : ''}">
+                                    ⚖️
+                                </button>
+
+                                <a href="${city.mapsUrl}" target="_blank" class="btn-icon-action" title="Abrir rota no Google Maps">
+                                    🗺️
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        // MODAL HANDLERS
+        function openModal(cityId) {
+            const city = destinations.find(d => d.id === cityId);
+            if (!city) return;
+
+            const fuel = getFuelMetrics(city.distKm);
+
+            document.getElementById('m-cover').src = city.image;
+            document.getElementById('m-cover').alt = city.name;
+            document.getElementById('m-rank').innerText = `#${city.rank} no Ranking de Tempo`;
+            document.getElementById('m-category').innerText = city.categoryLabel;
+            document.getElementById('m-title').innerText = city.name;
+            document.getElementById('m-location').innerText = `📍 ${city.state} • Partindo de Rua Leite Ribeiro, Fonseca, Niterói (CEP 24120-210)`;
+
+            // Metrics
+            document.getElementById('m-metrics').innerHTML = `
+                <div class="metric-item">
+                    <div class="metric-icon">⏱️</div>
+                    <div class="metric-data">
+                        <div class="metric-label">Tempo de Viagem</div>
+                        <div class="metric-val highlight-time">${city.timeStr}</div>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-icon">🛣️</div>
+                    <div class="metric-data">
+                        <div class="metric-label">Distância (${tripMode === 'ida-volta' ? 'Ida e Volta' : 'Apenas Ida'})</div>
+                        <div class="metric-val">${fuel.totalKm} km</div>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-icon">⛽</div>
+                    <div class="metric-data">
+                        <div class="metric-label">Combustível (${kmPerLiter} km/L)</div>
+                        <div class="metric-val">${fuel.liters} Litros</div>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-icon">💰</div>
+                    <div class="metric-data">
+                        <div class="metric-label">Custo Estimado (R$ ${gasPrice.toFixed(2)})</div>
+                        <div class="metric-val highlight-cost">${fuel.costFormatted}</div>
+                    </div>
+                </div>
+            `;
+
+            // Route advice
+            document.getElementById('m-route-desc').innerText = city.routeSummary;
+            document.getElementById('m-route-tip').innerText = `💡 Dica de Saída de Niterói: ${city.departureTip}`;
+
+            // Weather detail grid
+            document.getElementById('m-weather-grid').innerHTML = city.weatherForecast.map(w => `
+                <div class="weather-detail-card">
+                    <div class="wd-date">${w.date} (${w.day})</div>
+                    <div class="wd-icon">${w.icon}</div>
+                    <div class="wd-temp">${w.temp}</div>
+                    <div class="wd-desc">${w.desc}</div>
+                </div>
+            `).join('');
+
+            // Itinerary
+            document.getElementById('m-itinerary').innerHTML = city.itinerary.map(item => `
+                <div class="timeline-item">
+                    <div class="timeline-day-title">${item.day} • ${item.title}</div>
+                    <div class="timeline-day-desc">${item.text}</div>
+                </div>
+            `).join('');
+
+            // Gastronomy
+            document.getElementById('m-gastronomy').innerText = city.gastronomy;
+
+            // Attractions
+            document.getElementById('m-attractions').innerHTML = city.highlights.map(attr => `
+                <a href="https://www.google.com/search?q=${encodeURIComponent(attr + ' ' + city.name)}" target="_blank" class="attraction-link-card">
+                    <span class="alc-title">📍 ${attr}</span>
+                    <span class="alc-arrow">↗</span>
+                </a>
+            `).join('');
+
+            // Navigation CTA buttons
+            document.getElementById('m-gmaps-btn').href = city.mapsUrl;
+            document.getElementById('m-waze-btn').href = city.wazeUrl;
+
+            document.getElementById('detail-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
-            document.getElementById('cityModal').style.display = 'none';
+            document.getElementById('detail-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
-        window.onclick = function(event) {
-            const modal = document.getElementById('cityModal');
-            if (event.target == modal) { modal.style.display = 'none'; }
+        function handleModalBackdropClick(e) {
+            if (e.target.id === 'detail-modal') {
+                closeModal();
+            }
+        }
+
+        // FAVORITES
+        function toggleFavorite(id) {
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(favId => favId !== id);
+            } else {
+                favorites.push(id);
+            }
+            localStorage.setItem('fav_trips', JSON.stringify(favorites));
+            renderDestinations();
+        }
+
+        // COMPARISON
+        function toggleCompare(id) {
+            if (compareList.includes(id)) {
+                compareList = compareList.filter(cId => cId !== id);
+            } else {
+                if (compareList.length >= 4) {
+                    alert('Você pode comparar no máximo 4 cidades por vez.');
+                    return;
+                }
+                compareList.push(id);
+            }
+            localStorage.setItem('compare_trips', JSON.stringify(compareList));
+            updateCompareBadge();
+            renderDestinations();
+        }
+
+        function updateCompareBadge() {
+            document.getElementById('compare-badge').innerText = compareList.length;
+        }
+
+        function openCompareModal() {
+            if (compareList.length === 0) {
+                alert('Selecione pelo menos 1 ou 2 destinos clicando no botão ⚖️ de cada card para comparar!');
+                return;
+            }
+
+            const selectedCities = destinations.filter(d => compareList.includes(d.id));
+            const container = document.getElementById('compare-table-container');
+
+            container.innerHTML = `
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            ${selectedCities.map(c => `<th>${c.name}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tempo de Estrada</td>
+                            ${selectedCities.map(c => `<td style="color: var(--accent-cyan); font-weight: 800;">${c.timeStr}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>Distância (${tripMode === 'ida-volta' ? 'Ida e Volta' : 'Ida'})</td>
+                            ${selectedCities.map(c => {
+                                const f = getFuelMetrics(c.distKm);
+                                return `<td>${f.totalKm} km</td>`;
+                            }).join('')}
+                        </tr>
+                        <tr>
+                            <td>Litros (${kmPerLiter} km/l)</td>
+                            ${selectedCities.map(c => {
+                                const f = getFuelMetrics(c.distKm);
+                                return `<td>${f.liters} L</td>`;
+                            }).join('')}
+                        </tr>
+                        <tr>
+                            <td>Custo Combustível</td>
+                            ${selectedCities.map(c => {
+                                const f = getFuelMetrics(c.distKm);
+                                return `<td style="color: var(--accent-orange); font-weight: 800;">${f.costFormatted}</td>`;
+                            }).join('')}
+                        </tr>
+                        <tr>
+                            <td>Clima no Feriado</td>
+                            ${selectedCities.map(c => {
+                                const w = c.weatherForecast[1]; // Sexta
+                                return `<td>${w.icon} ${w.temp} (${w.desc})</td>`;
+                            }).join('')}
+                        </tr>
+                        <tr>
+                            <td>Estilo de Viagem</td>
+                            ${selectedCities.map(c => `<td><span class="card-category-badge" style="position:static;">${c.categoryLabel}</span></td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td>Ações</td>
+                            ${selectedCities.map(c => `
+                                <td>
+                                    <button class="btn-view-details" style="padding: 6px 12px; font-size: 0.78rem;" onclick="closeCompareModal(); openModal('${c.id}')">Ver Detalhes</button>
+                                </td>
+                            `).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('compare-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCompareModal() {
+            document.getElementById('compare-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function handleCompareBackdropClick(e) {
+            if (e.target.id === 'compare-modal') {
+                closeCompareModal();
+            }
+        }
+
+        // THEME TOGGLE
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme_preference', newTheme);
+        }
+
+        // LOAD SAVED THEME
+        const savedTheme = localStorage.getItem('theme_preference');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
         }
     </script>
 </body>
