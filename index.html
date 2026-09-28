@@ -2900,6 +2900,52 @@
                 const isWeekend = b.dataset.preset === 'weekend' && dateStr === weekendStr;
                 b.classList.toggle('active', isToday || isWeekend || b.dataset.date === dateStr);
             });
+
+            // Check if specific forecast for this date range is saved in cache
+            let foundInCache = false;
+            try {
+                const cachedForDate = JSON.parse(localStorage.getItem(`cached_weather_${dateStr}`) || 'null');
+                if (cachedForDate) {
+                    destinations.forEach(dest => {
+                        if (cachedForDate[dest.id]) {
+                            dest.weatherForecast = cachedForDate[dest.id];
+                        }
+                    });
+                    foundInCache = true;
+                }
+            } catch(e) {}
+
+            // Always synchronize date and day labels across destinations
+            destinations.forEach(dest => {
+                if (dest.weatherForecast && dest.weatherForecast.length >= 4) {
+                    for (let i = 0; i < 4; i++) {
+                        if (currentWeatherPeriod.dates[i]) {
+                            dest.weatherForecast[i].date = currentWeatherPeriod.dates[i].formatted;
+                            dest.weatherForecast[i].day = currentWeatherPeriod.dates[i].weekday;
+                        }
+                    }
+                }
+            });
+
+            // Immediately re-render destination cards so dates update on screen instantly!
+            renderDestinations();
+
+            // If modal is open, update its weather detail grid as well
+            const detailModal = document.getElementById('detail-modal');
+            if (detailModal && detailModal.style.display === 'flex') {
+                const activeTitle = document.getElementById('m-title').innerText;
+                const currentCity = destinations.find(d => d.name === activeTitle);
+                if (currentCity) {
+                    document.getElementById('m-weather-grid').innerHTML = currentCity.weatherForecast.map(w => `
+                        <div class="weather-detail-card">
+                            <div class="wd-date">${w.date} (${w.day})</div>
+                            <div class="wd-icon">${w.icon}</div>
+                            <div class="wd-temp">${w.temp}</div>
+                            <div class="wd-desc">${w.desc}</div>
+                        </div>
+                    `).join('');
+                }
+            }
         }
 
         function setWeatherToToday() {
@@ -2936,7 +2982,7 @@
 
         // RESTORE CACHED WEATHER IF SAVED IN LOCALSTORAGE
         try {
-            const cachedWeather = JSON.parse(localStorage.getItem('cached_weather_forecasts') || 'null');
+            const cachedWeather = JSON.parse(localStorage.getItem(`cached_weather_${selectedWeatherStartDate}`) || localStorage.getItem('cached_weather_forecasts') || 'null');
             if (cachedWeather) {
                 destinations.forEach(dest => {
                     if (cachedWeather[dest.id]) {
@@ -3440,13 +3486,41 @@
             if (btn) btn.disabled = true;
             if (spinner) spinner.classList.add('spin-active');
             if (label) label.innerText = 'Consultando...';
-            if (info) info.innerText = `📡 Consultando satélites para ${currentWeatherPeriodStr}...`;
+            if (info) info.innerText = `📡 Consultando dados meteorológicos para ${currentWeatherPeriodStr}...`;
 
             try {
                 const range = currentWeatherPeriod;
                 const lats = destinations.map(d => CITY_COORDINATES[d.id].lat).join(',');
                 const lons = destinations.map(d => CITY_COORDINATES[d.id].lon).join(',');
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&timezone=America%2FSao_Paulo&start_date=${range.startDate}&end_date=${range.endDate}`;
+
+                // Calculate difference in days between selected start date and today
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const [sY, sM, sD] = range.startDate.split('-').map(Number);
+                const targetDate = new Date(sY, sM - 1, sD);
+                const diffDays = Math.round((targetDate - today) / (1000 * 60 * 60 * 24));
+
+                // Live satellite forecast is available within 15 days of today
+                const isLiveForecast = (diffDays >= -2 && diffDays <= 15);
+                let url = '';
+                let isHistoricalClim = false;
+
+                if (isLiveForecast) {
+                    url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&timezone=America%2FSao_Paulo&start_date=${range.startDate}&end_date=${range.endDate}`;
+                } else {
+                    // For dates beyond 15 days in the future (e.g. December) or in the past, query Open-Meteo Historical Archive API
+                    isHistoricalClim = true;
+                    let refYear = sY;
+                    if (targetDate > today) {
+                        refYear = 2025; // Historical reference year
+                    } else if (sY >= today.getFullYear()) {
+                        refYear = 2025;
+                    }
+                    const histStart = `${refYear}-${String(sM).padStart(2, '0')}-${String(sD).padStart(2, '0')}`;
+                    const [eY, eM, eD] = range.endDate.split('-').map(Number);
+                    const histEnd = `${refYear}-${String(eM).padStart(2, '0')}-${String(eD).padStart(2, '0')}`;
+                    url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lats}&longitude=${lons}&start_date=${histStart}&end_date=${histEnd}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=America%2FSao_Paulo`;
+                }
 
                 const response = await fetch(url);
                 const dataArray = await response.json();
@@ -3471,11 +3545,15 @@
                         const wCode = (daily.weathercode && daily.weathercode[i] !== undefined) ? daily.weathercode[i] : 2;
                         const tMax = Math.round(daily.temperature_2m_max ? daily.temperature_2m_max[i] : 25);
                         const tMin = Math.round(daily.temperature_2m_min ? daily.temperature_2m_min[i] : 18);
-                        const precip = (daily.precipitation_sum && daily.precipitation_sum[i] !== null) ? daily.precipitation_sum[i].toFixed(1) : '0.0';
-                        const prob = (daily.precipitation_probability_max && daily.precipitation_probability_max[i] !== null) ? daily.precipitation_probability_max[i] : 0;
+                        const precip = (daily.precipitation_sum && daily.precipitation_sum[i] !== null) ? Number(daily.precipitation_sum[i]).toFixed(1) : '0.0';
+                        const prob = (daily.precipitation_probability_max && daily.precipitation_probability_max[i] !== null && daily.precipitation_probability_max[i] !== undefined)
+                            ? daily.precipitation_probability_max[i]
+                            : null;
                         
                         const wInfo = getWMOInfo(wCode);
-                        const desc = `${wInfo.desc} (${prob}% prob., ${precip}mm)`;
+                        const desc = prob !== null
+                            ? `${wInfo.desc} (${prob}% prob., ${precip}mm)`
+                            : `${wInfo.desc} (Média época: ${precip}mm chuva)`;
 
                         newForecast.push({
                             date: dayMeta.formatted,
@@ -3517,25 +3595,29 @@
                 }
 
                 if (info) {
-                    info.innerHTML = `✅ <strong>Satélite Open-Meteo</strong> • ${range.periodStr} (Hoje às ${timeStr})`;
+                    if (isHistoricalClim) {
+                        info.innerHTML = `📊 <strong>Climatologia Histórica (Open-Meteo)</strong> • ${range.periodStr}`;
+                    } else {
+                        info.innerHTML = `✅ <strong>Satélite Open-Meteo (Ao Vivo)</strong> • ${range.periodStr} (Hoje às ${timeStr})`;
+                    }
                 }
                 if (label) label.innerText = 'Previsão Atualizada!';
 
                 if (showToast) {
-                    showToastMessage(`🌤️ Previsão atualizada para ${range.periodStr} (4 dias) em todas as 14 cidades!`);
+                    if (isHistoricalClim) {
+                        showToastMessage(`📊 Climatologia real carregada para ${range.periodStr} (4 dias) em todas as 14 cidades!`);
+                    } else {
+                        showToastMessage(`🌤️ Previsão ao vivo atualizada para ${range.periodStr} (4 dias) em todas as 14 cidades!`);
+                    }
                 }
             } catch (err) {
                 console.error('Erro ao atualizar clima:', err);
-                const isOutOfRange = err.message.toLowerCase().includes('out of allowed range');
-                const userMsg = isOutOfRange
-                    ? '⚠️ A previsão do satélite só alcança até 16 dias a partir de hoje. Escolha uma data próxima!'
-                    : `⚠️ ${err.message || 'Falha ao conectar aos satélites.'}`;
-                    
+                renderDestinations();
                 if (info) {
-                    info.innerText = isOutOfRange ? '⚠️ Data fora da janela de 16 dias do satélite.' : '⚠️ Falha ao conectar.';
+                    info.innerText = '⚠️ Erro ao consultar satélites.';
                 }
                 if (showToast) {
-                    showToastMessage(userMsg, 4500);
+                    showToastMessage(`⚠️ ${err.message || 'Falha ao conectar aos satélites.'}`, 4500);
                 }
             } finally {
                 if (btn) btn.disabled = false;
